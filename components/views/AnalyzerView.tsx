@@ -381,37 +381,44 @@ export default function AnalyzerView({ topics }: AnalyzerViewProps) {
                           </h4>
                           
                           <div className="space-y-4 flex-1">
-                            <div>
-                              <div className="flex justify-between text-sm font-bold text-[#1a1a1a] mb-1">
-                                <span>Varianța Frazei (Burstiness)</span>
-                                <span>{calculateStylometry(articleData.text).stdDev}</span>
-                              </div>
-                              <div className="w-full bg-gray-200 rounded-full h-2">
-                                <div className="bg-[#7c1f31] h-2 rounded-full" style={{ width: `${Math.min(100, (calculateStylometry(articleData.text).stdDev / 10) * 100)}%` }}></div>
-                              </div>
-                              <p className="text-xs text-[#1a1a1a]/60 mt-1">Scor sub 4 indică uniformitate (AI).</p>
-                            </div>
+                            {(() => {
+                              const stylometry = calculateStylometry(articleData.text);
+                              return (
+                                <>
+                                  <div>
+                                    <div className="flex justify-between text-sm font-bold text-[#1a1a1a] mb-1">
+                                      <span>Varianța Frazei (Burstiness)</span>
+                                      <span>{stylometry.stdDev}</span>
+                                    </div>
+                                    <div className="w-full bg-gray-200 rounded-full h-2">
+                                      <div className="bg-[#7c1f31] h-2 rounded-full" style={{ width: `${Math.min(100, (stylometry.stdDev / 10) * 100)}%` }}></div>
+                                    </div>
+                                    <p className="text-xs text-[#1a1a1a]/60 mt-1">Scor sub 4 indică uniformitate (AI).</p>
+                                  </div>
 
-                            <div>
-                              <div className="flex justify-between text-sm font-bold text-[#1a1a1a] mb-1">
-                                <span>Diversitate Lexicală</span>
-                                <span>{calculateStylometry(articleData.text).lexicalDiversity}%</span>
-                              </div>
-                              <div className="w-full bg-gray-200 rounded-full h-2">
-                                <div className="bg-[#1a1a1a] h-2 rounded-full" style={{ width: `${calculateStylometry(articleData.text).lexicalDiversity}%` }}></div>
-                              </div>
-                            </div>
-                          </div>
+                                  <div>
+                                    <div className="flex justify-between text-sm font-bold text-[#1a1a1a] mb-1">
+                                      <span>Diversitate Lexicală</span>
+                                      <span>{stylometry.lexicalDiversity}%</span>
+                                    </div>
+                                    <div className="w-full bg-gray-200 rounded-full h-2">
+                                      <div className="bg-[#1a1a1a] h-2 rounded-full" style={{ width: `${stylometry.lexicalDiversity}%` }}></div>
+                                    </div>
+                                  </div>
 
-                          <div className="mt-6 pt-4 border-t border-[#1a1a1a]/10">
-                            <div className="text-sm text-[#1a1a1a]/60 mb-1">Verdict Analiză Locală:</div>
-                            <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-bold ${
-                              calculateStylometry(articleData.text).verdict === "Tipar Mecanic (Specific AI)" 
-                                ? "bg-red-100 text-red-700" 
-                                : "bg-green-100 text-green-700"
-                            }`}>
-                              {calculateStylometry(articleData.text).verdict}
-                            </div>
+                                  <div className="mt-6 pt-4 border-t border-[#1a1a1a]/10">
+                                    <div className="text-sm text-[#1a1a1a]/60 mb-1">Verdict Analiză Locală:</div>
+                                    <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-bold ${
+                                      stylometry.verdict === "Tipar Mecanic (Specific AI)" 
+                                        ? "bg-red-100 text-red-700" 
+                                        : "bg-green-100 text-green-700"
+                                    }`}>
+                                      {stylometry.verdict}
+                                    </div>
+                                  </div>
+                                </>
+                              );
+                            })()}
                           </div>
                         </div>
                       </div>

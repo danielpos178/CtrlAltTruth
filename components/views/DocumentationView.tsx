@@ -31,7 +31,7 @@ export default function DocumentationView() {
       {/* Main Content */}
       <div className="flex-1 prose prose-slate max-w-none prose-headings:text-[#1a1a1a] prose-a:text-[#7c1f31] prose-strong:text-[#7c1f31]">
         <div className="mb-12 border-b border-[#1a1a1a]/10 pb-8">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-[#1a1a1a] mb-4 tracking-tight">Documentație Tehnică Oficială</h1>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-[#1a1a1a] mb-4 tracking-tight">Documentație Tehnică</h1>
           <p className="text-xl text-[#1a1a1a]/70 font-medium">Specificații arhitecturale și decizii de inginerie pentru platforma Ctrl+Alt+Truth.</p>
         </div>
 
