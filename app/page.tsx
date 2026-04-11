@@ -50,7 +50,8 @@ const LESSONS = [
           "Să promoveze dialogul constructiv"
         ],
         correctAnswer: 1,
-        explanation: "Limbajul polarizant folosește dihotomia &apos;Noi vs Ei&apos; pentru a genera conflict și a bloca gândirea critică."
+        explanation: "Limbajul polarizant folosește dihotomia &apos;Noi vs Ei&apos; pentru a genera conflict și a bloca gândirea critică.",
+        remediation: "Recitește secțiunea despre 'Noi vs Ei' și modul în care emoțiile sunt folosite ca armă."
       },
       {
         question: "Ce parte a creierului este &apos;scurtcircuitată&apos; de furie?",
@@ -61,7 +62,20 @@ const LESSONS = [
           "Bulbul rahidian"
         ],
         correctAnswer: 2,
-        explanation: "Emoțiile intense precum furia reduc activitatea în cortexul prefrontal, zona responsabilă pentru analiza logică și decizii raționale."
+        explanation: "Emoțiile intense precum furia reduc activitatea în cortexul prefrontal, zona responsabilă pentru analiza logică și decizii raționale.",
+        remediation: "Amintește-ți că logica locuiește în cortexul prefrontal, care 'îngheață' sub asaltul furiei."
+      },
+      {
+        question: "Care dintre următoarele este un exemplu de 'Sintaxă Clickbait'?",
+        options: [
+          "Raportul anual privind inflația a fost publicat.",
+          "Nu o să-ți vină să crezi ce a descoperit acest cercetător!",
+          "Prețul grâului a crescut cu 2% în ultima lună.",
+          "Ministerul Sănătății recomandă vaccinarea anuală."
+        ],
+        correctAnswer: 1,
+        explanation: "Clickbait-ul folosește 'curiosity gap' pentru a forța utilizatorul să dea click, ascunzând informația esențială.",
+        remediation: "Caută titlurile care promit 'senzații' fără a spune clar despre ce este vorba."
       }
     ]
   },
@@ -91,7 +105,32 @@ const LESSONS = [
           "Un algoritm de securitate cibernetică"
         ],
         correctAnswer: 1,
-        explanation: "Astroturfing-ul este o formă de propagandă care maschează sponsorii unei campanii pentru a o face să pară o mișcare civică autentică."
+        explanation: "Astroturfing-ul este o formă de propagandă care maschează sponsorii unei campanii pentru a o face să pară o mișcare civică autentică.",
+        remediation: "Gândește-te la 'gazon artificial' (AstroTurf) ca la o mișcare populară 'falsă'."
+      },
+      {
+        question: "Care este rolul principal al unei 'Ferme de Troli'?",
+        options: [
+          "Să producă alimente bio pentru angajații IT",
+          "Să creeze iluzia unui consens larg prin mii de comentarii și like-uri false",
+          "Să testeze securitatea serverelor guvernamentale",
+          "Să ofere suport tehnic utilizatorilor de rețele sociale"
+        ],
+        correctAnswer: 1,
+        explanation: "Fermele de troli manipulează algoritmii și percepția publică prin volum, nu prin argumente.",
+        remediation: "Amintește-ți că trolii lucrează în grupuri mari pentru a 'inunda' spațiul digital."
+      },
+      {
+        question: "Ce este 'Social Proof' (Dovada Socială)?",
+        options: [
+          "Un document oficial eliberat de primărie",
+          "Tendința oamenilor de a copia acțiunile celorlalți în situații ambigue",
+          "O aplicație de verificare a identității pe Facebook",
+          "O metodă de a demonstra că ești popular la școală"
+        ],
+        correctAnswer: 1,
+        explanation: "Social proof este motivul pentru care boții sunt atât de eficienți: dacă mulți par să creadă ceva, tindem să credem și noi.",
+        remediation: "Revedeți începutul lecției despre cum creierul urmează mulțimea."
       }
     ]
   },
@@ -120,7 +159,32 @@ const LESSONS = [
           "Că textul conține multe greșeli gramaticale"
         ],
         correctAnswer: 2,
-        explanation: "Modelele AI tind să genereze propoziții cu o structură și lungime uniformă, spre deosebire de ritmul variat al scriiturii umane."
+        explanation: "Modelele AI tind să genereze propoziții cu o structură și lungime uniformă, spre deosebire de ritmul variat al scriiturii umane.",
+        remediation: "Gândește-te la 'burst' ca la o explozie de varietate; AI-ul este prea 'plat'."
+      },
+      {
+        question: "Dacă un text are o 'Perplexitate' scăzută, înseamnă că:",
+        options: [
+          "Este foarte greu de înțeles",
+          "Este foarte previzibil din punct de vedere statistic",
+          "Conține multe metafore complexe",
+          "A fost scris de un poet celebru"
+        ],
+        correctAnswer: 1,
+        explanation: "AI-ul alege cuvintele cele mai probabile, făcând textul foarte previzibil pentru algoritmii de detecție.",
+        remediation: "Amintește-ți: perplexitate scăzută = previzibilitate ridicată."
+      },
+      {
+        question: "De ce este generarea de Fake News prin AI o problemă majoră?",
+        options: [
+          "Pentru că AI-ul face greșeli de ortografie",
+          "Pentru că permite producția dezinformării la scară industrială, cu costuri zero",
+          "Pentru că AI-ul refuză să scrie despre politică",
+          "Pentru că textele AI sunt prea lungi"
+        ],
+        correctAnswer: 1,
+        explanation: "Viteza și costul scăzut permit inundarea internetului cu minciuni perfect formulate gramatical.",
+        remediation: "Recitește introducerea lecției despre impactul LLM-urilor."
       }
     ]
   },
@@ -150,7 +214,32 @@ const LESSONS = [
           "Deepfake-ul se referă doar la text"
         ],
         correctAnswer: 1,
-        explanation: "Cheapfakes sunt manipulări rudimentare care nu necesită inteligență artificială, dar pot fi la fel de eficiente în dezinformare."
+        explanation: "Cheapfakes sunt manipulări rudimentare care nu necesită inteligență artificială, dar pot fi la fel de eficiente în dezinformare.",
+        remediation: "Reține că 'Cheap' vine de la simplitatea tehnică, nu neapărat de la cost."
+      },
+      {
+        question: "Ce tehnologie stă la baza creării Deepfakes?",
+        options: [
+          "Photoshop clasic",
+          "Rețele neuronale (Inteligență Artificială)",
+          "Animarea prin stop-motion",
+          "Desenul de mână"
+        ],
+        correctAnswer: 1,
+        explanation: "Deepfakes folosesc algoritmi de 'deep learning' pentru a învăța trăsăturile unei persoane și a le replica.",
+        remediation: "Cuvântul 'Deep' din Deepfake provine de la Deep Learning."
+      },
+      {
+        question: "Cum poți detecta adesea un Deepfake video imperfect?",
+        options: [
+          "Persoana nu clipește natural sau marginile feței sunt încețoșate",
+          "Video-ul este alb-negru",
+          "Nu există sunet",
+          "Persoana poartă mereu ochelari de soare"
+        ],
+        correctAnswer: 0,
+        explanation: "Incoerențele vizuale, cum ar fi clipitul neregulat sau artefactele din jurul gurii, sunt semne comune.",
+        remediation: "Fii atent la detaliile fine ale mișcărilor feței."
       }
     ]
   },
@@ -180,7 +269,32 @@ const LESSONS = [
           "Pentru a promova pacea globală"
         ],
         correctAnswer: 1,
-        explanation: "Furia și indignarea sunt emoții care provoacă reacții rapide (like, share, comentariu), ceea ce este profitabil pentru platforme."
+        explanation: "Furia și indignarea sunt emoții care provoacă reacții rapide (like, share, comentariu), ceea ce este profitabil pentru platforme.",
+        remediation: "Amintește-ți că scopul platformei este să te țină online cât mai mult timp."
+      },
+      {
+        question: "Ce este 'Biasul de Confirmare'?",
+        options: [
+          "O eroare de programare a algoritmului",
+          "Tendința de a căuta și accepta doar informații care ne dau dreptate",
+          "O metodă de a șterge conturile false",
+          "Un tip de reclamă personalizată"
+        ],
+        correctAnswer: 1,
+        explanation: "Creierul nostru preferă să aibă dreptate decât să afle adevărul, iar algoritmii exploatează acest lucru.",
+        remediation: "Gândește-te la bias ca la o 'lentilă' care filtrează realitatea."
+      },
+      {
+        question: "Cum poți 'sparge' o Bulă de Ecou?",
+        options: [
+          "Ștergând aplicația de Facebook",
+          "Urmărind intenționat surse de știri cu perspective diferite de ale tale",
+          "Dând block tuturor celor care te contrazic",
+          "Postând doar poze cu pisici"
+        ],
+        correctAnswer: 1,
+        explanation: "Diversificarea surselor forțează algoritmul să îți arate și alte puncte de vedere.",
+        remediation: "Ieșirea din zona de confort informațional este cheia."
       }
     ]
   },
@@ -210,7 +324,32 @@ const LESSONS = [
           "Să ignori complet textul și să te uiți doar la poze"
         ],
         correctAnswer: 1,
-        explanation: "Citirea laterală este metoda prin care verifici credibilitatea unei surse căutând informații externe despre ea, în loc să te bazezi pe ce spune site-ul despre sine."
+        explanation: "Citirea laterală este metoda prin care verifici credibilitatea unei surse căutând informații externe despre ea, in loc să te bazezi pe ce spune site-ul despre sine.",
+        remediation: "Imaginează-ți că deschizi tab-uri în 'lateral' pentru a verifica sursa."
+      },
+      {
+        question: "De ce design-ul profesional al unui site nu este o dovadă de credibilitate?",
+        options: [
+          "Pentru că design-ul este subiectiv",
+          "Pentru că oricine poate cumpăra un template premium pentru a părea oficial",
+          "Pentru că site-urile serioase arată mereu demodat",
+          "Pentru că culorile frumoase distrag atenția"
+        ],
+        correctAnswer: 1,
+        explanation: "Aspectul vizual este ușor de falsificat; conținutul și reputația sursei sunt cele care contează.",
+        remediation: "Nu te lăsa păcălit de 'ambalaj'."
+      },
+      {
+        question: "Care este primul pas recomandat când întâlnești o știre șocantă?",
+        options: [
+          "Să o distribui imediat prietenilor",
+          "Să părăsești site-ul și să verifici informația din alte surse",
+          "Să scrii un comentariu furios",
+          "Să crezi tot ce scrie dacă are poze"
+        ],
+        correctAnswer: 1,
+        explanation: "Pauza și verificarea externă sunt cele mai bune apărări împotriva manipulării.",
+        remediation: "Amintește-ți regula: 'Stop, Gândește, Verifică'."
       }
     ]
   }

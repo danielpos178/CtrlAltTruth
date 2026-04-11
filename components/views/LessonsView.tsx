@@ -229,14 +229,25 @@ export default function LessonsView({ lessons, activeLesson, setActiveLesson }: 
                             animate={{ opacity: 1, y: 0 }}
                             className={`p-6 rounded-2xl border-l-4 ${selectedOption === currentQuiz[currentQuestionIndex].correctAnswer ? 'bg-green-50 border-green-500 text-green-800' : 'bg-red-50 border-red-500 text-red-800'}`}
                           >
-                            <p className="font-bold mb-1">{selectedOption === currentQuiz[currentQuestionIndex].correctAnswer ? 'Corect!' : 'Nu e chiar așa.'}</p>
-                            <p className="text-sm opacity-90">{currentQuiz[currentQuestionIndex].explanation}</p>
+                            <div className="flex justify-between items-start mb-3">
+                              <p className="font-bold text-lg">{selectedOption === currentQuiz[currentQuestionIndex].correctAnswer ? 'Excelent!' : 'Mai încearcă.'}</p>
+                            </div>
+                            
+                            <p className="text-sm opacity-90 mb-4">{currentQuiz[currentQuestionIndex].explanation}</p>
+                            
+                            {selectedOption !== currentQuiz[currentQuestionIndex].correctAnswer && (
+                              <div className="bg-white/40 p-4 rounded-xl mb-4 border border-red-200">
+                                <p className="text-xs font-bold uppercase tracking-wider mb-1">Sugestie de remediere:</p>
+                                <p className="text-sm italic">{currentQuiz[currentQuestionIndex].remediation}</p>
+                              </div>
+                            )}
+
                             <button 
                               onClick={handleNextQuestion}
-                              className="mt-6 w-full py-3 bg-[#1a1a1a] text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-black transition-all"
+                              className="w-full py-4 bg-[#1a1a1a] text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-black transition-all shadow-lg active:scale-95"
                             >
-                              {currentQuestionIndex < currentQuiz.length - 1 ? 'Următoarea Întrebare' : 'Vezi Rezultatul'}
-                              <ArrowRight className="w-4 h-4" />
+                              {currentQuestionIndex < currentQuiz.length - 1 ? 'Următoarea Întrebare' : 'Vezi Rezultatul Final'}
+                              <ArrowRight className="w-5 h-5" />
                             </button>
                           </motion.div>
                         )}
