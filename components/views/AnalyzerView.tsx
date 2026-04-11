@@ -352,7 +352,7 @@ export default function AnalyzerView({ topics }: AnalyzerViewProps) {
                         </div>
                         
                         <div className="bg-yellow-50 p-4 rounded-xl border border-yellow-200 text-yellow-800 text-sm">
-                          <strong>Notă despre formatare:</strong> Ai observat cum arăta textul? L-am încadrat intenționat într-un format de {uiStyle === 'facebook' ? 'postare social media' : 'articol de știri premium'}. Acest "Efect de Halo" vizual influențează subconștient cât de multă încredere acordăm informației, chiar înainte de a citi primul cuvânt.
+                          <strong>Notă despre formatare:</strong> Ai observat cum arăta textul? L-am încadrat intenționat într-un format de {uiStyle === 'facebook' ? 'postare social media' : 'articol de știri premium'}. Acest &quot;Efect de Halo&quot; vizual influențează subconștient cât de multă încredere acordăm informației, chiar înainte de a citi primul cuvânt.
                         </div>
                       </div>
 

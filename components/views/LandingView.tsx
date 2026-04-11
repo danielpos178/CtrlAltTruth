@@ -130,7 +130,7 @@ export default function LandingView({ onNavigate }: LandingViewProps) {
               />
             ))}
           </div>
-          <p className="text-sm text-center text-[#1a1a1a]/60 mt-4">O singură știre falsă "infectează" exponențial rețeaua.</p>
+          <p className="text-sm text-center text-[#1a1a1a]/60 mt-4">O singură știre falsă &quot;infectează&quot; exponențial rețeaua.</p>
         </div>
       </div>
 

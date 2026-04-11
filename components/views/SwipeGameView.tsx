@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Check, Clock, AlertCircle } from 'lucide-react';
+import { X, Check, Clock } from 'lucide-react';
 
 const HEADLINES = [
   { id: 1, text: "DEZASTRU TOTAL: Guvernul a decis să interzică complet mașinile pe benzină de mâine!", isFake: true, explanation: "Hiperbolă ('DEZASTRU TOTAL') și informație falsă (interzicerea nu se întâmplă 'de mâine')." },
@@ -17,34 +17,18 @@ const HEADLINES = [
   { id: 10, text: "Compania locală de transport public anunță introducerea a 20 de noi autobuze electrice.", isFake: false, explanation: "Știre locală utilitară, fără elemente de manipulare emoțională." }
 ];
 
+const shuffleHeadlines = () => [...HEADLINES].sort(() => Math.random() - 0.5);
+
 export default function SwipeGameView() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(10);
   const [gameOver, setGameOver] = useState(false);
   const [feedback, setFeedback] = useState<{ isCorrect: boolean; explanation: string } | null>(null);
-  const [cards, setCards] = useState([...HEADLINES].sort(() => Math.random() - 0.5)); // Shuffle
+  const [cards, setCards] = useState(shuffleHeadlines);
 
-  useEffect(() => {
-    if (gameOver || feedback) return;
-
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          handleSwipe(null); // Time's up = wrong answer
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [currentIndex, gameOver, feedback]);
-
-  const handleSwipe = (userGuessedFake: boolean | null) => {
+  const handleSwipe = useCallback((userGuessedFake: boolean | null) => {
     const currentCard = cards[currentIndex];
-    
-    // If userGuessedFake is null, it means time ran out
     const isCorrect = userGuessedFake !== null && userGuessedFake === currentCard.isFake;
 
     if (isCorrect) {
@@ -64,8 +48,24 @@ export default function SwipeGameView() {
       } else {
         setGameOver(true);
       }
-    }, 3000); // Show feedback for 3 seconds
-  };
+    }, 3000);
+  }, [currentIndex, cards]);
+
+  useEffect(() => {
+    if (gameOver || feedback) return;
+
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          handleSwipe(null);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [currentIndex, gameOver, feedback, handleSwipe]);
 
   const restartGame = () => {
     setCards([...HEADLINES].sort(() => Math.random() - 0.5));
@@ -121,7 +121,7 @@ export default function SwipeGameView() {
               className="absolute inset-0 bg-white rounded-3xl shadow-2xl border border-[#1a1a1a]/10 p-8 flex flex-col justify-center text-center"
             >
               <h3 className="text-2xl md:text-3xl font-bold text-[#1a1a1a] leading-tight font-serif">
-                "{currentCard.text}"
+                &quot;{currentCard.text}&quot;
               </h3>
             </motion.div>
           ) : (
