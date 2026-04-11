@@ -89,10 +89,10 @@ export default function SwipeGameView() {
   if (gameOver) {
     return (
       <div className="max-w-2xl mx-auto text-center space-y-8 py-20">
-        <h2 className="text-4xl font-extrabold text-[#1a1a1a]">Joc Terminat!</h2>
-        <div className="bg-white p-10 rounded-3xl border border-[#1a1a1a]/10 shadow-xl">
-          <div className="text-7xl font-black text-[#7c1f31] mb-4">{score} / {cards.length}</div>
-          <p className="text-xl text-[#1a1a1a]/80 mb-8">
+        <h2 className="text-4xl font-extrabold text-[#1a1a1a] dark:text-white">Joc Terminat!</h2>
+        <div className="bg-white dark:bg-[#1a1a1a] p-10 rounded-3xl border border-[#1a1a1a]/10 dark:border-white/10 shadow-xl">
+          <div className="text-7xl font-black text-[#7c1f31] dark:text-[#ff4d6d] mb-4">{score} / {cards.length}</div>
+          <p className="text-xl text-[#1a1a1a]/80 dark:text-white/80 mb-8">
             {score >= 8 ? "Excelent! Ai un ochi critic foarte bine antrenat." : 
              score >= 5 ? "Bine! Dar mai ai de lucrat la detectarea manipulării subtile." : 
              "Atenție! Ești foarte vulnerabil la dezinformare. Citește lecțiile noastre!"}
@@ -113,9 +113,9 @@ export default function SwipeGameView() {
   return (
     <div className="max-w-xl mx-auto py-10 flex flex-col items-center">
       <div className="w-full flex justify-between items-center mb-8 px-4">
-        <div className="text-lg font-bold text-[#1a1a1a]">Scor: <span className="text-[#7c1f31]">{score}</span></div>
-        <div className="text-sm font-medium text-[#1a1a1a]/60">Titlul {currentIndex + 1} din {cards.length}</div>
-        <div className={`flex items-center gap-2 font-bold text-lg ${timeLeft <= 3 ? 'text-red-600 animate-pulse' : 'text-[#1a1a1a]'}`}>
+        <div className="text-lg font-bold text-[#1a1a1a] dark:text-white">Scor: <span className="text-[#7c1f31] dark:text-[#ff4d6d]">{score}</span></div>
+        <div className="text-sm font-medium text-[#1a1a1a]/60 dark:text-white/60">Titlul {currentIndex + 1} din {cards.length}</div>
+        <div className={`flex items-center gap-2 font-bold text-lg ${timeLeft <= 3 ? 'text-red-600 animate-pulse' : 'text-[#1a1a1a] dark:text-white'}`}>
           <Clock className="w-5 h-5" /> {timeLeft}s
         </div>
       </div>
@@ -128,9 +128,9 @@ export default function SwipeGameView() {
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: -20 }}
-              className="absolute inset-0 bg-white rounded-3xl shadow-2xl border border-[#1a1a1a]/10 p-8 flex flex-col justify-center text-center"
+              className="absolute inset-0 bg-white dark:bg-[#1a1a1a] rounded-3xl shadow-2xl border border-[#1a1a1a]/10 dark:border-white/10 p-8 flex flex-col justify-center text-center"
             >
-              <h3 className="text-2xl md:text-3xl font-bold text-[#1a1a1a] leading-tight font-serif">
+              <h3 className="text-2xl md:text-3xl font-bold text-[#1a1a1a] dark:text-white leading-tight font-serif">
                 &quot;{currentCard.text}&quot;
               </h3>
             </motion.div>
@@ -140,29 +140,31 @@ export default function SwipeGameView() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               className={`absolute inset-0 rounded-3xl shadow-2xl border p-8 flex flex-col justify-center text-center ${
-                feedback.isCorrect ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'
+                feedback.isCorrect 
+                  ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800/30' 
+                  : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800/30'
               }`}
             >
               <div className="mb-4 flex justify-center">
                 {feedback.isCorrect ? (
-                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-                    <Check className="w-8 h-8 text-green-600" />
+                  <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
+                    <Check className="w-8 h-8 text-green-600 dark:text-green-400" />
                   </div>
                 ) : (
-                  <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
-                    <X className="w-8 h-8 text-red-600" />
+                  <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
+                    <X className="w-8 h-8 text-red-600 dark:text-red-400" />
                   </div>
                 )}
               </div>
-              <h4 className={`text-2xl font-bold mb-4 ${feedback.isCorrect ? 'text-green-800' : 'text-red-800'}`}>
+              <h4 className={`text-2xl font-bold mb-4 ${feedback.isCorrect ? 'text-green-800 dark:text-green-200' : 'text-red-800 dark:text-red-200'}`}>
                 {feedback.isCorrect ? 'Corect!' : 'Greșit!'}
               </h4>
-              <p className="text-lg text-[#1a1a1a]/80 leading-relaxed">
+              <p className="text-lg text-[#1a1a1a]/80 dark:text-white/80 leading-relaxed">
                 {feedback.isCorrect 
                   ? `Corect! ${currentCard.isFake ? 'Acest titlu folosește tehnici de clickbait, este suspect.' : 'Acest titlu este factual și credibil.'}` 
                   : `Greșit! ${currentCard.isFake ? 'Acest titlu era suspect.' : 'Acest titlu era credibil.'}`}
                 <br/><br/>
-                {feedback.explanation}
+                <span className="text-sm opacity-90">{currentCard.explanation}</span>
               </p>
             </motion.div>
           )}
@@ -173,19 +175,19 @@ export default function SwipeGameView() {
         <button
           onClick={() => handleSwipe(true)}
           disabled={!!feedback}
-          className="flex-1 h-20 bg-red-100 hover:bg-red-200 text-red-700 rounded-2xl font-bold text-xl flex items-center justify-center gap-2 transition-colors disabled:opacity-50 min-h-[44px]"
+          className="flex-1 h-20 bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-900/50 text-red-700 dark:text-red-300 rounded-2xl font-bold text-xl flex items-center justify-center gap-2 transition-colors disabled:opacity-50 min-h-[44px]"
         >
           <X className="w-6 h-6" /> SUSPECT
         </button>
         <button
           onClick={() => handleSwipe(false)}
           disabled={!!feedback}
-          className="flex-1 h-20 bg-green-100 hover:bg-green-200 text-green-700 rounded-2xl font-bold text-xl flex items-center justify-center gap-2 transition-colors disabled:opacity-50 min-h-[44px]"
+          className="flex-1 h-20 bg-green-100 dark:bg-green-900/30 hover:bg-green-200 dark:hover:bg-green-900/50 text-green-700 dark:text-green-300 rounded-2xl font-bold text-xl flex items-center justify-center gap-2 transition-colors disabled:opacity-50 min-h-[44px]"
         >
           <Check className="w-6 h-6" /> CREDIBIL
         </button>
       </div>
-      <p className="text-[#1a1a1a]/50 text-sm mt-6 text-center">
+      <p className="text-[#1a1a1a]/50 dark:text-white/50 text-sm mt-6 text-center">
         Apasă SUSPECT dacă titlul folosește manipulare emoțională sau clickbait.<br/>
         Apasă CREDIBIL dacă este o știre factuală, neutră.
       </p>

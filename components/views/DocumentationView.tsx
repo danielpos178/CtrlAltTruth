@@ -11,36 +11,36 @@ export default function DocumentationView() {
     >
       {/* Sidebar Navigation */}
       <div className="w-full md:w-72 shrink-0">
-        <div className="md:sticky md:top-28 space-y-2 bg-white md:bg-transparent p-6 md:p-0 rounded-3xl md:rounded-none border md:border-none border-[#1a1a1a]/10 shadow-sm md:shadow-none mb-8 md:mb-0">
-          <h3 className="font-bold text-[#1a1a1a] mb-4 uppercase tracking-wider text-sm">Arhitectură & Documentație</h3>
-          <a href="#arhitectura" className="flex items-center gap-3 p-3 rounded-xl hover:bg-[#1a1a1a]/5 text-[#1a1a1a]/80 hover:text-[#7c1f31] font-medium transition-colors">
+        <div className="md:sticky md:top-28 space-y-2 bg-white dark:bg-[#1a1a1a] md:bg-transparent p-6 md:p-0 rounded-3xl md:rounded-none border md:border-none border-[#1a1a1a]/10 dark:border-white/10 shadow-sm md:shadow-none mb-8 md:mb-0">
+          <h3 className="font-bold text-[#1a1a1a] dark:text-white mb-4 uppercase tracking-wider text-sm">Arhitectură & Documentație</h3>
+          <a href="#arhitectura" className="flex items-center gap-3 p-3 rounded-xl hover:bg-[#1a1a1a]/5 dark:hover:bg-white/5 text-[#1a1a1a]/80 dark:text-white/80 hover:text-[#7c1f31] dark:hover:text-[#ff4d6d] font-medium transition-colors">
             <Code className="w-5 h-5" /> Arhitectura Sistemului
           </a>
-          <a href="#motorul-ai" className="flex items-center gap-3 p-3 rounded-xl hover:bg-[#1a1a1a]/5 text-[#1a1a1a]/80 hover:text-[#7c1f31] font-medium transition-colors">
+          <a href="#motorul-ai" className="flex items-center gap-3 p-3 rounded-xl hover:bg-[#1a1a1a]/5 dark:hover:bg-white/5 text-[#1a1a1a]/80 dark:text-white/80 hover:text-[#7c1f31] dark:hover:text-[#ff4d6d] font-medium transition-colors">
             <Cpu className="w-5 h-5" /> Integrarea LLM & API
           </a>
-          <a href="#algoritmi" className="flex items-center gap-3 p-3 rounded-xl hover:bg-[#1a1a1a]/5 text-[#1a1a1a]/80 hover:text-[#7c1f31] font-medium transition-colors">
+          <a href="#algoritmi" className="flex items-center gap-3 p-3 rounded-xl hover:bg-[#1a1a1a]/5 dark:hover:bg-white/5 text-[#1a1a1a]/80 dark:text-white/80 hover:text-[#7c1f31] dark:hover:text-[#ff4d6d] font-medium transition-colors">
             <FileText className="w-5 h-5" /> Algoritmică Client-Side
           </a>
-          <a href="#securitate" className="flex items-center gap-3 p-3 rounded-xl hover:bg-[#1a1a1a]/5 text-[#1a1a1a]/80 hover:text-[#7c1f31] font-medium transition-colors">
+          <a href="#securitate" className="flex items-center gap-3 p-3 rounded-xl hover:bg-[#1a1a1a]/5 dark:hover:bg-white/5 text-[#1a1a1a]/80 dark:text-white/80 hover:text-[#7c1f31] dark:hover:text-[#ff4d6d] font-medium transition-colors">
             <ShieldCheck className="w-5 h-5" /> Securitate & Performanță
           </a>
-          <a href="#ghid-profesor" className="flex items-center gap-3 p-3 rounded-xl hover:bg-[#1a1a1a]/5 text-[#1a1a1a]/80 hover:text-[#7c1f31] font-medium transition-colors">
+          <a href="#ghid-profesor" className="flex items-center gap-3 p-3 rounded-xl hover:bg-[#1a1a1a]/5 dark:hover:bg-white/5 text-[#1a1a1a]/80 dark:text-white/80 hover:text-[#7c1f31] dark:hover:text-[#ff4d6d] font-medium transition-colors">
             <BookOpen className="w-5 h-5" /> Ghidul Profesorului
           </a>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 prose prose-slate max-w-none prose-headings:text-[#1a1a1a] prose-a:text-[#7c1f31] prose-strong:text-[#7c1f31]">
-        <div className="mb-12 border-b border-[#1a1a1a]/10 pb-8">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-[#1a1a1a] mb-4 tracking-tight">Documentație Tehnică Oficială</h1>
-          <p className="text-xl text-[#1a1a1a]/70 font-medium">Specificații arhitecturale și decizii de inginerie pentru platforma Ctrl+Alt+Truth.</p>
+      <div className="flex-1 prose prose-slate dark:prose-invert max-w-none prose-headings:text-[#1a1a1a] dark:prose-headings:text-white prose-a:text-[#7c1f31] dark:prose-a:text-[#ff4d6d] prose-strong:text-[#7c1f31] dark:prose-strong:text-[#ff4d6d]">
+        <div className="mb-12 border-b border-[#1a1a1a]/10 dark:border-white/10 pb-8">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-[#1a1a1a] dark:text-white mb-4 tracking-tight">Documentație Tehnică Oficială</h1>
+          <p className="text-xl text-[#1a1a1a]/70 dark:text-white/70 font-medium">Specificații arhitecturale și decizii de inginerie pentru platforma Ctrl+Alt+Truth.</p>
         </div>
 
         <section id="arhitectura" className="mb-16 scroll-mt-28">
-          <h2 className="text-3xl font-bold text-[#1a1a1a] mb-6 flex items-center gap-3">
-            <div className="bg-[#7c1f31]/10 p-2.5 rounded-xl"><Code className="w-6 h-6 text-[#7c1f31]" /></div>
+          <h2 className="text-3xl font-bold text-[#1a1a1a] dark:text-white mb-6 flex items-center gap-3">
+            <div className="bg-[#7c1f31]/10 p-2.5 rounded-xl"><Code className="w-6 h-6 text-[#7c1f31] dark:text-[#ff4d6d]" /></div>
             1. Arhitectura Sistemului și Stack-ul Tehnologic
           </h2>
           <p>
@@ -55,8 +55,8 @@ export default function DocumentationView() {
         </section>
 
         <section id="motorul-ai" className="mb-16 scroll-mt-28">
-          <h2 className="text-3xl font-bold text-[#1a1a1a] mb-6 flex items-center gap-3">
-            <div className="bg-[#7c1f31]/10 p-2.5 rounded-xl"><Cpu className="w-6 h-6 text-[#7c1f31]" /></div>
+          <h2 className="text-3xl font-bold text-[#1a1a1a] dark:text-white mb-6 flex items-center gap-3">
+            <div className="bg-[#7c1f31]/10 p-2.5 rounded-xl"><Cpu className="w-6 h-6 text-[#7c1f31] dark:text-[#ff4d6d]" /></div>
             2. Integrarea LLM și Arhitectura Backend (API)
           </h2>
           <p>
@@ -74,8 +74,8 @@ export default function DocumentationView() {
         </section>
 
         <section id="algoritmi" className="mb-16 scroll-mt-28">
-          <h2 className="text-3xl font-bold text-[#1a1a1a] mb-6 flex items-center gap-3">
-            <div className="bg-[#7c1f31]/10 p-2.5 rounded-xl"><FileText className="w-6 h-6 text-[#7c1f31]" /></div>
+          <h2 className="text-3xl font-bold text-[#1a1a1a] dark:text-white mb-6 flex items-center gap-3">
+            <div className="bg-[#7c1f31]/10 p-2.5 rounded-xl"><FileText className="w-6 h-6 text-[#7c1f31] dark:text-[#ff4d6d]" /></div>
             3. Algoritmică Client-Side și Analiză NLP Locală
           </h2>
           <h3>Analiza Stilometrică (Local Stylometry)</h3>
@@ -92,8 +92,8 @@ export default function DocumentationView() {
         </section>
 
         <section id="securitate" className="mb-16 scroll-mt-28">
-          <h2 className="text-3xl font-bold text-[#1a1a1a] mb-6 flex items-center gap-3">
-            <div className="bg-[#7c1f31]/10 p-2.5 rounded-xl"><ShieldCheck className="w-6 h-6 text-[#7c1f31]" /></div>
+          <h2 className="text-3xl font-bold text-[#1a1a1a] dark:text-white mb-6 flex items-center gap-3">
+            <div className="bg-[#7c1f31]/10 p-2.5 rounded-xl"><ShieldCheck className="w-6 h-6 text-[#7c1f31] dark:text-[#ff4d6d]" /></div>
             4. Securitate, Performanță și State Management
           </h2>
           <p>
@@ -111,8 +111,8 @@ export default function DocumentationView() {
         </section>
 
         <section id="ghid-profesor" className="mb-16 scroll-mt-28">
-          <h2 className="text-3xl font-bold text-[#1a1a1a] mb-6 flex items-center gap-3">
-            <div className="bg-[#7c1f31]/10 p-2.5 rounded-xl"><BookOpen className="w-6 h-6 text-[#7c1f31]" /></div>
+          <h2 className="text-3xl font-bold text-[#1a1a1a] dark:text-white mb-6 flex items-center gap-3">
+            <div className="bg-[#7c1f31]/10 p-2.5 rounded-xl"><BookOpen className="w-6 h-6 text-[#7c1f31] dark:text-[#ff4d6d]" /></div>
             5. Ghidul Profesorului: Integrare la Clasă
           </h2>
           <p>
@@ -133,8 +133,8 @@ export default function DocumentationView() {
             <li><strong>Lecții Structurate cu Quiz:</strong> Academia oferă 6 module progresive. Fiecare modul se încheie cu un quiz de evaluare care oferă feedback instantaneu și explicații detaliate pentru fiecare răspuns.</li>
           </ol>
 
-          <div className="bg-white p-8 rounded-[2rem] border border-[#7c1f31]/20 shadow-sm">
-            <h4 className="text-[#7c1f31] font-bold mb-2">Sfat pentru profesori:</h4>
+          <div className="bg-white dark:bg-[#1a1a1a] p-8 rounded-[2rem] border border-[#7c1f31]/20 dark:border-white/10 shadow-sm">
+            <h4 className="text-[#7c1f31] dark:text-[#ff4d6d] font-bold mb-2">Sfat pentru profesori:</h4>
             <p className="text-sm italic">
               Încurajați elevii să folosească tehnica &quot;Citirii Laterale&quot; (Nivelul 6) în timpul oricărei activități de cercetare online. Aceasta este cea mai eficientă metodă de fact-checking utilizată de profesioniști.
             </p>

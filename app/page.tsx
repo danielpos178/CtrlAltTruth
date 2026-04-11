@@ -43,7 +43,7 @@ const LESSONS = [
           <li><strong>Curiosity Gap (Clickbait):</strong> &quot;Nu o să-ți vină să crezi ce s-a întâmplat!&quot; - forțează un click prin exploatarea curiozității naturale, adesea livrând o informație banală.</li>
         </ul>
 
-        <div className="bg-[#7c1f31]/5 p-4 rounded-xl border-l-4 border-[#7c1f31] my-4">
+        <div className="bg-[#7c1f31]/5 dark:bg-[#7c1f31]/10 p-4 rounded-xl border-l-4 border-[#7c1f31] my-4">
           <p className="text-sm italic"><strong>Exemplu de contrast:</strong></p>
           <p className="text-sm"><em>Neutru:</em> &quot;Guvernul a propus o nouă taxă de 1% pentru companiile mari.&quot;</p>
           <p className="text-sm"><em>Polarizant:</em> &quot;JAF LA DRUMUL MARE! Guvernul ne FURĂ ultimii bani pentru a hrăni corporațiile străine! Ieșiți în stradă până nu e prea târziu!&quot;</p>
@@ -175,7 +175,7 @@ const LESSONS = [
         <h3>Problema Halucinațiilor</h3>
         <p>Deoarece AI-ul este un motor de probabilități, el poate genera fapte false cu o încredere totală. Aceasta se numește <strong>halucinație</strong>. Un text AI poate cita studii care nu există sau evenimente istorice inventate, păstrând un ton academic și autoritar.</p>
         
-        <p className="text-sm bg-white/50 p-3 rounded-lg border border-[#7c1f31]/10">
+        <p className="text-sm bg-white/50 dark:bg-white/5 p-3 rounded-lg border border-[#7c1f31]/10 dark:border-white/10">
           <strong>Sfat:</strong> Dacă un text pare &quot;prea perfect&quot; și lipsit de orice eroare sau variație stilistică, trece-l prin filtrul de burstiness.
         </p>
       </>
@@ -426,10 +426,10 @@ export default function CtrlAltTruth() {
   const [activeLesson, setActiveLesson] = useState<number | null>(null);
 
   return (
-    <div className="min-h-screen bg-[#e7edeb] font-sans selection:bg-[#7c1f31]/20">
+    <div className="min-h-screen bg-[#e7edeb] dark:bg-[#0a0a0a] font-sans selection:bg-[#7c1f31]/20 transition-colors duration-300">
       <Navbar currentView={currentView} setCurrentView={setCurrentView} />
 
-      <main className="max-w-6xl mx-auto px-6">
+      <main className="max-w-6xl mx-auto px-6 text-[#1a1a1a] dark:text-white/90">
         {currentView === 'landing' && (
           <LandingView onNavigate={setCurrentView} />
         )}
