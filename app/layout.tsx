@@ -1,3 +1,6 @@
+
+// Licensed under the GNU AGPL-3.0-only.
+
 import type {Metadata, Viewport} from 'next';
 import './globals.css'; 
 import { ThemeProvider } from '@/components/providers/ThemeProvider';

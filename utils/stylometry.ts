@@ -1,3 +1,6 @@
+
+// Licensed under the GNU AGPL-3.0-only.
+
 export interface StylometryResult {
   score: number;
   meanSentenceLength: number;

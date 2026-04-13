@@ -1,3 +1,6 @@
+
+// Licensed under the GNU AGPL-3.0-only.
+
 import { GoogleGenAI, Type } from '@google/genai';
 import { NextResponse } from 'next/server';
 

@@ -1,3 +1,6 @@
+
+// Licensed under the GNU AGPL-3.0-only.
+
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { BookOpen, X, ArrowRight, CheckCircle2, AlertCircle, Trophy, HelpCircle } from 'lucide-react';

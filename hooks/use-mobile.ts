@@ -1,3 +1,6 @@
+
+// Licensed under the GNU AGPL-3.0-only.
+
 import * as React from "react"
 
 const MOBILE_BREAKPOINT = 768
