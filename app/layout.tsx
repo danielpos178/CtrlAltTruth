@@ -1,5 +1,5 @@
 import type {Metadata, Viewport} from 'next';
-import './globals.css'; // Global styles
+import './globals.css'; 
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
 
 export const viewport: Viewport = {
