@@ -1,8 +1,9 @@
-// Licensed under the GNU AGPL-3.0-only.
 import type {Metadata, Viewport} from 'next';
 import './globals.css'; // Global styles
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
+import { AuthProvider } from '@/components/providers/AuthProvider';
 import Navbar from '@/components/layout/Navbar';
+import { Toaster } from 'react-hot-toast';
 
 export const viewport: Viewport = {
   themeColor: '#7c1f31',
@@ -42,10 +43,13 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
       </head>
       <body suppressHydrationWarning className="min-h-screen bg-[#e7edeb] dark:bg-[#0a0a0a] font-sans selection:bg-[#7c1f31]/20 transition-colors duration-300">
         <ThemeProvider>
-          <Navbar />
-          <main className="max-w-6xl mx-auto px-6 text-[#1a1a1a] dark:text-white/90">
-            {children}
-          </main>
+          <AuthProvider>
+            <Navbar />
+            <main className="max-w-6xl mx-auto px-6 text-[#1a1a1a] dark:text-white/90">
+              {children}
+            </main>
+            <Toaster position="bottom-right" />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

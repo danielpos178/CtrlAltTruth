@@ -1,4 +1,3 @@
-// Licensed under the GNU AGPL-3.0-only.
 import React from 'react';
 import { motion } from 'motion/react';
 import { FileText, Code, Cpu, ShieldCheck, BookOpen } from 'lucide-react';

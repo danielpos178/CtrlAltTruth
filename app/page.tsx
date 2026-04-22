@@ -1,4 +1,3 @@
-// Licensed under the GNU AGPL-3.0-only.
 'use client';
 
 import React from 'react';

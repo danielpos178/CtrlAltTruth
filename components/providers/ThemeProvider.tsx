@@ -1,4 +1,3 @@
-// Licensed under the GNU AGPL-3.0-only.
 'use client';
 /* eslint-disable react-hooks/set-state-in-effect */
 

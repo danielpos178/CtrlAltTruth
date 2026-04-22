@@ -1,11 +1,12 @@
-// Licensed under the GNU AGPL-3.0-only.
 'use client';
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Check, Clock } from 'lucide-react';
+import { useProgress } from '@/hooks/useProgress';
 
 const HEADLINES = [
+
   { id: 1, text: "DEZASTRU TOTAL: Guvernul a decis să interzică complet mașinile pe benzină de mâine!", isFake: true, explanation: "Hiperbolă ('DEZASTRU TOTAL') și informație falsă (interzicerea nu se întâmplă 'de mâine')." },
   { id: 2, text: "Banca Națională a menținut dobânda cheie la 7% pentru al treilea trimestru consecutiv.", isFake: false, explanation: "Limbaj neutru, factual, raportând o decizie economică standard." },
   { id: 3, text: "ȘOCANT! Ce au găsit medicii în corpul acestui bărbat te va lăsa fără cuvinte. Click aici!", isFake: true, explanation: "Sintaxă clasică de clickbait ('ȘOCANT!', 'te va lăsa fără cuvinte') pentru a genera curiozitate artificială." },
@@ -37,13 +38,21 @@ export default function SwipeGameView() {
   const [gameOver, setGameOver] = useState(false);
   const [feedback, setFeedback] = useState<{ isCorrect: boolean; explanation: string } | null>(null);
   const [cards, setCards] = useState(shuffleHeadlines);
+  const { saveSwipeGameScore, notifyUnauthenticated } = useProgress();
+
+  useEffect(() => {
+    // Notify user on first load
+    notifyUnauthenticated();
+  }, [notifyUnauthenticated]);
 
   const handleSwipe = useCallback((userGuessedFake: boolean | null) => {
     const currentCard = cards[currentIndex];
     const isCorrect = userGuessedFake !== null && userGuessedFake === currentCard.isFake;
+    let newScore = score;
 
     if (isCorrect) {
-      setScore(prev => prev + 1);
+      newScore = score + 1;
+      setScore(newScore);
     }
 
     setFeedback({
@@ -58,9 +67,10 @@ export default function SwipeGameView() {
         setTimeLeft(10);
       } else {
         setGameOver(true);
+        saveSwipeGameScore(newScore);
       }
     }, 3000);
-  }, [currentIndex, cards]);
+  }, [currentIndex, cards, score, saveSwipeGameScore]);
 
   useEffect(() => {
     if (gameOver || feedback) return;

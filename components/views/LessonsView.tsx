@@ -1,7 +1,7 @@
-// Licensed under the GNU AGPL-3.0-only.
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { BookOpen, X, ArrowRight, CheckCircle2, AlertCircle, Trophy, HelpCircle } from 'lucide-react';
+import { useProgress } from '@/hooks/useProgress';
 
 interface LessonsViewProps {
   lessons: any[];
@@ -16,6 +16,7 @@ export default function LessonsView({ lessons, activeLesson, setActiveLesson }: 
   const [showExplanation, setShowExplanation] = useState(false);
   const [score, setScore] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
+  const { markLessonCompleted, notifyUnauthenticated } = useProgress();
 
   const currentLesson = lessons.find(l => l.id === activeLesson);
   const currentQuiz = currentLesson?.quiz || [];
@@ -36,6 +37,9 @@ export default function LessonsView({ lessons, activeLesson, setActiveLesson }: 
       setShowExplanation(false);
     } else {
       setQuizCompleted(true);
+      if (activeLesson) {
+        markLessonCompleted(activeLesson);
+      }
     }
   };
 
@@ -52,6 +56,12 @@ export default function LessonsView({ lessons, activeLesson, setActiveLesson }: 
     setActiveLesson(null);
     resetQuiz();
   };
+
+  const startQuiz = () => {
+    notifyUnauthenticated();
+    setQuizStarted(true);
+  };
+
 
   return (
     <motion.div 
@@ -160,7 +170,7 @@ export default function LessonsView({ lessons, activeLesson, setActiveLesson }: 
                           <p className="text-[#1a1a1a]/70 dark:text-white/70 text-lg">Testează-ți cunoștințele acumulate în această lecție printr-un scurt quiz.</p>
                         </div>
                         <button 
-                          onClick={() => setQuizStarted(true)}
+                          onClick={startQuiz}
                           className="w-full sm:w-auto px-8 py-4 bg-[#7c1f31] text-white rounded-2xl font-bold text-lg hover:bg-[#5a1623] transition-all shadow-lg hover:shadow-xl active:scale-95"
                         >
                           Începe Quiz-ul

@@ -1,4 +1,3 @@
-// Licensed under the GNU AGPL-3.0-only.
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -6,6 +5,7 @@ import { motion } from 'motion/react';
 import { Loader2, ArrowRight, RefreshCcw, ThumbsUp, MessageCircle, Share2, Globe, Clock, User, Brain, HelpCircle } from 'lucide-react';
 import { calculateStylometry } from '@/utils/stylometry';
 import TutorialOverlay from '@/components/ui/TutorialOverlay';
+import { useProgress } from '@/hooks/useProgress';
 
 interface ArticleData {
   text: string;
@@ -33,7 +33,9 @@ export default function AnalyzerView({ topics }: AnalyzerViewProps) {
   const [timeLeft, setTimeLeft] = useState(25);
   const [uiStyle, setUiStyle] = useState<'facebook' | 'news'>('news');
   const [showTutorial, setShowTutorial] = useState(false);
+  const [currentTopicId, setCurrentTopicId] = useState<string | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const { saveAnalyzedTopic, notifyUnauthenticated } = useProgress();
 
   useEffect(() => {
     const hasSeenTutorial = localStorage.getItem('hasSeenAnalyzerTutorial');
@@ -90,6 +92,8 @@ export default function AnalyzerView({ topics }: AnalyzerViewProps) {
   const handleSelectTopic = async (topic: any) => {
     setIsLoading(true);
     setAppState('select-topic');
+    notifyUnauthenticated();
+    setCurrentTopicId(topic.id);
     
     try {
       const res = await fetch('/api/generate', {
@@ -127,6 +131,9 @@ export default function AnalyzerView({ topics }: AnalyzerViewProps) {
   const handleSubmitAnalysis = () => {
     if (timerRef.current) clearInterval(timerRef.current);
     setAppState('results');
+    if (currentTopicId) {
+      saveAnalyzedTopic(currentTopicId);
+    }
   };
 
   const handlePlayAgain = () => {
