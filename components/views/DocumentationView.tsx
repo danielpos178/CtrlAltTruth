@@ -7,14 +7,14 @@ import { FileText, Code, Cpu, ShieldCheck, BookOpen } from 'lucide-react';
 
 export default function DocumentationView() {
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }} 
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className="max-w-6xl mx-auto py-10 px-4 md:px-0 flex flex-col md:flex-row gap-12"
     >
       {/* Sidebar Navigation */}
       <div className="w-full md:w-72 shrink-0">
-        <div className="md:sticky md:top-28 space-y-2 bg-white dark:bg-[#1a1a1a] md:bg-transparent p-6 md:p-0 rounded-3xl md:rounded-none border md:border-none border-[#1a1a1a]/10 dark:border-white/10 shadow-sm md:shadow-none mb-8 md:mb-0">
+        <div className="md:sticky md:top-28 space-y-2 bg-white dark:bg-[#1a1a1a00] md:bg-transparent p-6 md:p-0 rounded-3xl md:rounded-none border md:border-none border-[#1a1a1a]/10 dark:border-white/10 shadow-sm md:shadow-none mb-8 md:mb-0">
           <h3 className="font-bold text-[#1a1a1a] dark:text-white mb-4 uppercase tracking-wider text-sm">Arhitectură & Documentație</h3>
           <a href="#arhitectura" className="flex items-center gap-3 p-3 rounded-xl hover:bg-[#1a1a1a]/5 dark:hover:bg-white/5 text-[#1a1a1a]/80 dark:text-white/80 hover:text-[#7c1f31] dark:hover:text-[#ff4d6d] font-medium transition-colors">
             <Code className="w-5 h-5" /> Arhitectura Sistemului
@@ -121,7 +121,7 @@ export default function DocumentationView() {
           <p>
             Platforma <strong>Ctrl+Alt+Truth</strong> este concepută ca un instrument pedagogic interactiv pentru lecțiile de educație civică, TIC sau gândire critică. Iată cum poate fi integrată eficient în procesul de predare:
           </p>
-          
+
           <h3>Obiective Pedagogice</h3>
           <ul>
             <li><strong>Dezvoltarea gândirii critice:</strong> Elevii învață să nu accepte informația ca fiind adevărată doar pe baza aspectului vizual al sursei.</li>
