@@ -1,8 +1,9 @@
+// Licensed under the GNU AGPL-3.0-only.
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, ChevronRight, Info } from 'lucide-react';
+import { X, ChevronRight, Info, Check } from 'lucide-react';
 
 interface TutorialStep {
   title: string;
@@ -19,11 +20,13 @@ interface TutorialOverlayProps {
 
 export default function TutorialOverlay({ isOpen, onClose, steps }: TutorialOverlayProps) {
   const [currentStep, setCurrentStep] = useState(0);
+  const [isCompleting, setIsCompleting] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setCurrentStep(0);
+      setIsCompleting(false);
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
@@ -41,7 +44,11 @@ export default function TutorialOverlay({ isOpen, onClose, steps }: TutorialOver
     if (currentStep < steps.length - 1) {
       setCurrentStep(prev => prev + 1);
     } else {
-      onClose();
+      setIsCompleting(true);
+      setTimeout(() => {
+        onClose();
+        setIsCompleting(false);
+      }, 1200);
     }
   };
 
@@ -92,18 +99,44 @@ export default function TutorialOverlay({ isOpen, onClose, steps }: TutorialOver
                 {steps.map((_, idx) => (
                   <div
                     key={idx}
-                    className={`h-1.5 rounded-full transition-all duration-300 ${
-                      idx === currentStep ? 'w-8 bg-[#7c1f31]' : 'w-2 bg-gray-200 dark:bg-white/10'
-                    }`}
+                    className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentStep ? 'w-8 bg-[#7c1f31]' : 'w-2 bg-gray-200 dark:bg-white/10'
+                      }`}
                   />
                 ))}
               </div>
               <button
                 onClick={handleNext}
-                className="inline-flex items-center gap-2 bg-[#7c1f31] text-white px-6 py-3 rounded-xl font-bold hover:bg-[#5a1623] transition-all shadow-lg shadow-[#7c1f31]/20 min-h-[44px]"
+                disabled={isCompleting}
+                className={`inline-flex items-center gap-2 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg min-h-[44px] ${isCompleting
+                  ? 'bg-green-600 shadow-green-600/20'
+                  : 'bg-[#7c1f31] hover:bg-[#5a1623] shadow-[#7c1f31]/20'
+                  }`}
               >
-                {currentStep === steps.length - 1 ? 'Am înțeles' : 'Continuă'}
-                <ChevronRight className="w-4 h-4" />
+                {currentStep === steps.length - 1 ? (
+                  isCompleting ? (
+                    <motion.div
+                      className="flex items-center gap-2"
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                    >
+                      <span>Finalizat</span>
+                      <motion.div
+                        initial={{ scale: 0, rotate: -45 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 10, delay: 0.1 }}
+                      >
+                        <Check className="w-5 h-5 flex-shrink-0" strokeWidth={3} />
+                      </motion.div>
+                    </motion.div>
+                  ) : (
+                    'Am înțeles'
+                  )
+                ) : (
+                  <>
+                    Continuă
+                    <ChevronRight className="w-4 h-4 flex-shrink-0" />
+                  </>
+                )}
               </button>
             </div>
           </div>

@@ -1,4 +1,5 @@
-import type {Metadata, Viewport} from 'next';
+// Licensed under the GNU AGPL-3.0-only.
+import type { Metadata, Viewport } from 'next';
 import './globals.css'; // Global styles
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
 import { AuthProvider } from '@/components/providers/AuthProvider';
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
   }
 };
 
-export default function RootLayout({children}: {children: React.ReactNode}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ro" suppressHydrationWarning>
       <head>
