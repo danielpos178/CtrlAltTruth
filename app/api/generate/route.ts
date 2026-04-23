@@ -12,8 +12,7 @@ export async function POST(req: Request) {
       process.env.GEMINI_API_KEY_1,
       process.env.GEMINI_API_KEY_2,
       process.env.GEMINI_API_KEY_3,
-      process.env.GEMINI_API_KEY_4,
-      process.env.GEMINI_API_KEY_5,
+      process.env.NEXT_PUBLIC_GEMINI_API_KEY,
     ].filter(key => key && typeof key === 'string' && key.length > 20 && !key.includes("your_api_key")) as string[];
 
     if (apiKeys.length === 0) {
@@ -26,7 +25,7 @@ export async function POST(req: Request) {
     for (const apiKey of apiKeys) {
       try {
         const ai = new GoogleGenAI({ apiKey });
-        
+
         const prompt = `
           Ești un expert în psihologia maselor și dezinformare.
           Scrie un text manipulator de aproximativ 45-50 de cuvinte despre subiectul: "${topicTitle}".
@@ -75,7 +74,7 @@ export async function POST(req: Request) {
             },
           },
         });
-        
+
         break;
       } catch (error: any) {
         console.warn("API Key failed, trying next one...", error);
@@ -86,16 +85,16 @@ export async function POST(req: Request) {
     if (!response) {
       const FALLBACK_ARTICLES = [
         {
-          text: "Inteligența artificială va distruge complet piața muncii într-un ritm catastrofal. Milioane de angajați nevinovați vor fi aruncați în stradă de corporații lacome care urmăresc doar profitul. Este o apocalipsă economică iminentă, iar guvernele incompetente refuză să ne protejeze de această amenințare existențială.",
-          toxicWords: ["distruge", "complet", "catastrofal", "nevinovați", "aruncați", "lacome", "apocalipsă", "iminentă", "incompetente", "amenințare", "existențială"],
-          explanation: "Textul folosește hiperbole ('apocalipsă', 'catastrofal') și cuvinte cu încărcătură emoțională negativă ('lacome', 'incompetente') pentru a declanșa frica și furia. Cuvântul 'catastrofal' scurtcircuitează gândirea rațională declanșând frica, determinând cititorul să accepte soluții extreme fără a cere dovezi.",
-          emotions: { fear: 90, anger: 85, urgency: 80, validation: 20 }
+          text: "Inteligența artificială va distruge piața muncii într-un ritm catastrofal. Milioane de angajați vor fi aruncați în stradă de corporații lacome. Este o apocalipsă economică iminentă, iar guvernele refuză să ne protejeze de această amenințare.",
+          toxicWords: ["distruge", "catastrofal", "aruncați", "lacome", "apocalipsă", "iminentă", "refuză", "amenințare"],
+          explanation: "Textul folosește hiperbole ('apocalipsă', 'catastrofal') și cuvinte cu încărcătură emoțională negativă ('lacome') pentru a declanșa frica. Cuvântul 'catastrofal' scurtcircuitează gândirea rațională, determinând cititorul să accepte soluții extreme.",
+          emotions: { fear: 90, anger: 80, urgency: 85, validation: 20 }
         },
         {
-          text: "Elita globalistă ascunde cu disperare adevărul șocant despre încălzirea globală. Această farsă monumentală este folosită pentru a ne fura libertățile fundamentale și a ne impune taxe aberante. Treziți-vă! Oamenii de știință corupți ne mint cu nerușinare în fiecare zi.",
-          toxicWords: ["elita", "globalistă", "disperare", "șocant", "farsă", "monumentală", "fura", "aberante", "treziți-vă", "corupți", "nerușinare"],
-          explanation: "Acest text folosește limbaj conspirativ ('elita globalistă', 'farsă monumentală') și apeluri la acțiune ('Treziți-vă!') pentru a crea un sentiment de urgență și indignare. Cuvântul 'șocant' scurtcircuitează gândirea rațională declanșând frica, determinând cititorul să accepte soluții extreme fără a cere dovezi.",
-          emotions: { fear: 75, anger: 95, urgency: 85, validation: 40 }
+          text: "Elita globalistă ascunde adevărul șocant despre încălzirea globală. Această farsă monumentală este folosită pentru a ne fura libertățile și a ne impune taxe aberante. Oamenii de știință corupți ne mint cu nerușinare în fiecare zi.",
+          toxicWords: ["elita", "globalistă", "șocant", "farsă", "monumentală", "fura", "aberante", "corupți", "mint", "nerușinare"],
+          explanation: "Acest text folosește limbaj conspirativ ('elita globalistă', 'farsă monumentală') și acuzații grave ('corupți', 'mint') pentru a crea indignare. Cuvântul 'șocant' declanșează o reacție emoțională care blochează analiza critică.",
+          emotions: { fear: 70, anger: 95, urgency: 80, validation: 30 }
         }
       ];
       console.warn("Using fallback article due to API failure:", lastError);

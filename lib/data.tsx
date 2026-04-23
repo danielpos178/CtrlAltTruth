@@ -3,27 +3,28 @@ import React from 'react';
 import { ShieldAlert, AlertTriangle, MessageSquareWarning, Fingerprint, Video, Filter, Search } from 'lucide-react';
 
 export const TOPICS = [
-  { id: 'ai-jobs', title: 'Inteligența Artificială ne fură joburile', icon: Fingerprint, description: 'Analizează un text despre impactul AI asupra pieței muncii.' },
-  { id: 'crypto', title: 'Bani rapizi și siguri din Crypto', icon: MessageSquareWarning, description: 'Descoperă cum sunt promovate schemele de îmbogățire rapidă.' },
-  { id: 'diets', title: 'Secretul din spatele dietelor minune', icon: AlertTriangle, description: 'Învață să recunoști manipularea în industria de wellness.' },
-  { id: 'climate', title: 'Adevărul ascuns despre încălzirea globală', icon: ShieldAlert, description: 'Analizează discursul negaționist și teoriile conspirației.' },
-  { id: 'tiktok', title: 'Cine controlează algoritmul TikTok?', icon: Video, description: 'Vezi cum este folosită frica legată de rețelele sociale.' },
-  { id: 'economy', title: 'Dezastrul iminent al economiei globale', icon: Filter, description: 'Recunoaște panica indusă artificial despre prăbușiri financiare.' }
+  { id: 'ai-jobs', title: 'Inteligența Artificială ne fură joburile', icon_name: 'Fingerprint', description: 'Analizează un text despre impactul AI asupra pieței muncii.' },
+  { id: 'crypto', title: 'Bani rapizi și siguri din Crypto', icon_name: 'MessageSquareWarning', description: 'Descoperă cum sunt promovate schemele de îmbogățire rapidă.' },
+  { id: 'diets', title: 'Secretul din spatele dietelor minune', icon_name: 'AlertTriangle', description: 'Învață să recunoști manipularea în industria de wellness.' },
+  { id: 'climate', title: 'Adevărul ascuns despre încălzirea globală', icon_name: 'ShieldAlert', description: 'Analizează discursul negaționist și teoriile conspirației.' },
+  { id: 'tiktok', title: 'Cine controlează algoritmul TikTok?', icon_name: 'Video', description: 'Vezi cum este folosită frica legată de rețelele sociale.' },
+  { id: 'economy', title: 'Dezastrul iminent al economiei globale', icon_name: 'Filter', description: 'Recunoaște panica indusă artificial despre prăbușiri financiare.' }
 ];
 
 export const LESSONS = [
   {
     id: 1,
+    slug: 'anatomia-limbajului-polarizant',
     level: "Nivelul 1",
     title: "Anatomia Limbajului Polarizant",
-    icon: AlertTriangle,
+    icon_name: 'AlertTriangle',
     content: (
       <>
         <p>Limbajul polarizant este principala armă a dezinformării moderne. Scopul său nu este să informeze, ci să împartă lumea în două tabere ireconciliabile: &quot;Noi&quot; (cei buni, victimele) și &quot;Ei&quot; (cei răi, asupritorii).</p>
-        
+
         <h3>Economia Indignării (Outrage Economy)</h3>
         <p>În mediul digital, atenția ta este moneda de schimb. Platformele și creatorii de conținut au descoperit că <strong>furia</strong> este cea mai &quot;lipicioasă&quot; emoție. Un titlu care te revoltă are șanse mult mai mari să fie distribuit decât unul echilibrat. Această &quot;economie a indignării&quot; prioritizează viralitatea în detrimentul adevărului.</p>
-        
+
         <h3>Mecanismul Biologic: Deturnarea Amigdalei</h3>
         <p>Când simțim furie sau frică intensă, creierul nostru intră în modul &quot;luptă sau fugi&quot;. Amigdala preia controlul, iar <strong>cortexul prefrontal</strong> (centrul logicii și al analizei) este temporar dezactivat. Manipulatorii profită de această fereastră biologică pentru a insera idei false fără a fi filtrate de rațiune.</p>
 
@@ -82,9 +83,10 @@ export const LESSONS = [
   },
   {
     id: 2,
+    slug: 'fabricarea-consensului-ferma-de-troli',
     level: "Nivelul 2",
     title: "Fabricarea Consensului & Ferma de Troli",
-    icon: MessageSquareWarning,
+    icon_name: 'MessageSquareWarning',
     content: (
       <>
         <p>Creierul uman este programat evolutiv să urmeze mulțimea (<strong>Social Proof</strong>). Într-o situație ambiguă, ne uităm la ce fac ceilalți pentru a decide cum să reacționăm. Manipulatorii digitali &quot;hackuiesc&quot; acest instinct prin tehnologii de automatizare.</p>
@@ -146,13 +148,14 @@ export const LESSONS = [
   },
   {
     id: 3,
+    slug: 'amprenta-ai-perplexitate-burstiness',
     level: "Nivelul 3",
     title: "Amprenta AI: Perplexitate și Burstiness",
-    icon: Fingerprint,
+    icon_name: 'Fingerprint',
     content: (
       <>
         <p>Modelele de limbaj (LLM) pot genera texte perfecte gramatical, dar ele nu &quot;înțeleg&quot; realitatea; ele doar prezic următorul cuvânt. Această natură statistică lasă urme matematice specifice.</p>
-        
+
         <h3>Cei doi piloni ai detecției</h3>
         <ul>
           <li>
@@ -165,7 +168,7 @@ export const LESSONS = [
 
         <h3>Problema Halucinațiilor</h3>
         <p>Deoarece AI-ul este un motor de probabilități, el poate genera fapte false cu o încredere totală. Aceasta se numește <strong>halucinație</strong>. Un text AI poate cita studii care nu există sau evenimente istorice inventate, păstrând un ton academic și autoritar.</p>
-        
+
         <p className="text-sm bg-white/50 dark:bg-white/5 p-3 rounded-lg border border-[#7c1f31]/10 dark:border-white/10">
           <strong>Sfat:</strong> Dacă un text pare &quot;prea perfect&quot; și lipsit de orice eroare sau variație stilistică, trece-l prin filtrul de burstiness.
         </p>
@@ -212,21 +215,22 @@ export const LESSONS = [
   },
   {
     id: 4,
+    slug: 'deepfakes-manipularea-vizuala',
     level: "Nivelul 4",
     title: "Deepfakes și Manipularea Vizuală",
-    icon: Video,
+    icon_name: 'Video',
     content: (
       <>
         <p>Tehnologia a ajuns în punctul în care &quot;a vedea nu mai înseamnă a crede&quot;. Manipularea vizuală variază de la editări grosolane până la simulări digitale perfecte.</p>
-        
+
         <h3>Spectrul Falsificării</h3>
         <ul>
           <li>
             <strong>Deepfakes:</strong> Folosesc rețele neuronale (GANs) pentru a mapa trăsăturile unei persoane pe corpul alteia sau pentru a clona vocea. Sunt greu de realizat perfect, dar tehnologia avansează rapid.
           </li>
           <li>
-            <strong>Cheapfakes (sau Shallowfakes):</strong> Manipulări care nu folosesc AI, ci doar unelte de editare clasice. 
-            <br/><span className="text-sm opacity-70">Exemplu: Încetinirea unui video cu un politician pentru a-l face să pară sub influența alcoolului sau confuz.</span>
+            <strong>Cheapfakes (sau Shallowfakes):</strong> Manipulări care nu folosesc AI, ci doar unelte de editare clasice.
+            <br /><span className="text-sm opacity-70">Exemplu: Încetinirea unui video cu un politician pentru a-l face să pară sub influența alcoolului sau confuz.</span>
           </li>
           <li>
             <strong>Recontextualizarea:</strong> Folosirea unei imagini reale, dar cu o descriere falsă. O poză de la un protest din 2012 este prezentată ca fiind de ieri, dintr-o altă țară.
@@ -278,13 +282,14 @@ export const LESSONS = [
   },
   {
     id: 5,
+    slug: 'algoritmii-bula-de-ecou',
     level: "Nivelul 5",
     title: "Algoritmii și Bula de Ecou",
-    icon: Filter,
+    icon_name: 'Filter',
     content: (
       <>
         <p>Algoritmii rețelelor sociale nu sunt arbitri ai adevărului; ei sunt agenți de vânzări ai atenției tale. Scopul lor unic este <strong>Watch Time</strong> (timpul petrecut pe platformă).</p>
-        
+
         <h3>Anatomia Bulei de Ecou</h3>
         <ul>
           <li>
@@ -342,13 +347,14 @@ export const LESSONS = [
   },
   {
     id: 6,
+    slug: 'igiena-informationala-citirea-laterala',
     level: "Nivelul 6",
     title: "Igiena Informațională: Citirea Laterală",
-    icon: Search,
+    icon_name: 'Search',
     content: (
       <>
         <p>În era dezinformării, nu mai este suficient să citești un articol. Trebuie să devii un detectiv al informației folosind tehnici de verificare rapidă.</p>
-        
+
         <h3>Metoda SIFT (Stop, Investigate, Find, Trace)</h3>
         <ol className="space-y-4 my-4">
           <li>

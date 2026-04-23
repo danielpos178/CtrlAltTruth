@@ -3,12 +3,16 @@
 
 import React from 'react';
 import AnalyzerView from '@/components/views/AnalyzerView';
-import { TOPICS } from '@/lib/data';
+import { getTopics } from '@/lib/fetchData';
 
-export default function AnalyzerPage() {
-    return (
-        <div className="py-12 md:py-20">
-            <AnalyzerView topics={TOPICS} />
-        </div>
-    );
+export const revalidate = 60; // Cache for 60s
+
+export default async function AnalyzerPage() {
+  const topics = await getTopics();
+
+  return (
+    <div className="py-12 md:py-20">
+      <AnalyzerView topics={topics} />
+    </div>
+  );
 }

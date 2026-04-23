@@ -1,11 +1,23 @@
+// Licensed under the GNU AGPL-3.0-only.
+
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
-import { Loader2, ArrowRight, RefreshCcw, ThumbsUp, MessageCircle, Share2, Globe, Clock, User, Brain, HelpCircle } from 'lucide-react';
+import { Loader2, ArrowRight, RefreshCcw, ThumbsUp, MessageCircle, Share2, Globe, Clock, User, Brain, HelpCircle, ShieldAlert, AlertTriangle, MessageSquareWarning, Fingerprint, Video, Filter, Search } from 'lucide-react';
 import { calculateStylometry } from '@/utils/stylometry';
 import TutorialOverlay from '@/components/ui/TutorialOverlay';
 import { useProgress } from '@/hooks/useProgress';
+
+const iconMap: Record<string, any> = {
+  AlertTriangle,
+  MessageSquareWarning,
+  Fingerprint,
+  Video,
+  Filter,
+  Search,
+  ShieldAlert
+};
 
 interface ArticleData {
   text: string;
@@ -94,18 +106,18 @@ export default function AnalyzerView({ topics }: AnalyzerViewProps) {
     setAppState('select-topic');
     notifyUnauthenticated();
     setCurrentTopicId(topic.id);
-    
+
     try {
       const res = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ topicTitle: topic.title, topicDescription: topic.description })
       });
-      
+
       if (!res.ok) {
         throw new Error('Eroare la generarea articolului');
       }
-      
+
       const data = await res.json();
       data.toxicWords = data.toxicWords.map((w: string) => cleanWord(w));
       setArticleData(data);
@@ -123,7 +135,7 @@ export default function AnalyzerView({ topics }: AnalyzerViewProps) {
 
   const toggleWordSelection = (index: number) => {
     if (appState !== 'analyzing') return;
-    setSelectedWordIndices(prev => 
+    setSelectedWordIndices(prev =>
       prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
     );
   };
@@ -168,19 +180,19 @@ export default function AnalyzerView({ topics }: AnalyzerViewProps) {
     if (!articleData) return null;
 
     const words = articleData.text.split(' ');
-    
+
     const textContent = (
       <div className="flex flex-wrap gap-x-1.5 gap-y-3">
         {words.map((word, index) => {
           const isSelected = selectedWordIndices.includes(index);
           const cleanedWord = cleanWord(word);
           const isToxic = appState === 'results' ? flattenedToxicWords.includes(cleanedWord) : false;
-          
+
           let wordClasses = "px-1.5 rounded transition-colors duration-200 min-h-[44px] inline-flex items-center ";
-          
+
           if (appState === 'analyzing') {
-            wordClasses += isSelected 
-              ? "bg-[#7c1f31]/40 dark:bg-[#ff4d6d]/40 text-[#1a1a1a] dark:text-white cursor-pointer" 
+            wordClasses += isSelected
+              ? "bg-[#7c1f31]/40 dark:bg-[#ff4d6d]/40 text-[#1a1a1a] dark:text-white cursor-pointer"
               : "cursor-pointer hover:bg-[#1a1a1a]/10 dark:hover:bg-white/10";
           } else if (appState === 'results') {
             if (isSelected && isToxic) {
@@ -195,8 +207,8 @@ export default function AnalyzerView({ topics }: AnalyzerViewProps) {
           }
 
           return (
-            <span 
-              key={index} 
+            <span
+              key={index}
               onClick={() => toggleWordSelection(index)}
               className={wordClasses}
             >
@@ -269,15 +281,15 @@ export default function AnalyzerView({ topics }: AnalyzerViewProps) {
 
   return (
     <div className="w-full">
-      <TutorialOverlay 
-        isOpen={showTutorial} 
-        onClose={handleCloseTutorial} 
-        steps={tutorialSteps} 
+      <TutorialOverlay
+        isOpen={showTutorial}
+        onClose={handleCloseTutorial}
+        steps={tutorialSteps}
       />
-      
+
       {isLoading ? (
-        <motion.div 
-          initial={{ opacity: 0 }} 
+        <motion.div
+          initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           className="flex flex-col items-center justify-center py-20 space-y-6"
         >
@@ -287,15 +299,15 @@ export default function AnalyzerView({ topics }: AnalyzerViewProps) {
       ) : (
         <>
           {appState === 'select-topic' && (
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }} 
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="space-y-10"
             >
               <div className="text-center space-y-4">
                 <div className="flex items-center justify-center gap-4">
                   <h2 className="text-4xl font-extrabold tracking-tight text-[#1a1a1a] dark:text-white">Laboratorul de Adevăr</h2>
-                  <button 
+                  <button
                     onClick={() => setShowTutorial(true)}
                     className="p-2 rounded-full bg-[#7c1f31]/10 text-[#7c1f31] hover:bg-[#7c1f31]/20 transition-colors"
                     title="Arată tutorialul"
@@ -310,7 +322,7 @@ export default function AnalyzerView({ topics }: AnalyzerViewProps) {
 
               <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 {topics.map((topic) => {
-                  const Icon = topic.icon;
+                  const Icon = iconMap[topic.icon_name] || Search;
                   return (
                     <button
                       key={topic.id}
@@ -330,8 +342,8 @@ export default function AnalyzerView({ topics }: AnalyzerViewProps) {
           )}
 
           {(appState === 'analyzing' || appState === 'results') && articleData && (
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }} 
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="space-y-10 max-w-5xl mx-auto"
             >
@@ -343,8 +355,8 @@ export default function AnalyzerView({ topics }: AnalyzerViewProps) {
                   {appState === 'analyzing' ? 'Identifică Manipularea' : 'Cum te-ai descurcat?'}
                 </h2>
                 <p className="text-lg text-[#1a1a1a]/80 dark:text-white/80">
-                  {appState === 'analyzing' 
-                    ? 'Apasă pe cuvintele care ți se par exagerate, subiective sau care încearcă să te manipuleze emoțional.' 
+                  {appState === 'analyzing'
+                    ? 'Apasă pe cuvintele care ți se par exagerate, subiective sau care încearcă să te manipuleze emoțional.'
                     : 'Compară selecțiile tale cu analiza realizată de Inteligența Artificială.'}
                 </p>
               </div>
@@ -361,7 +373,7 @@ export default function AnalyzerView({ topics }: AnalyzerViewProps) {
                     </div>
                   </div>
                   <div className="w-full bg-gray-200 dark:bg-gray-800 rounded-full h-3 overflow-hidden">
-                    <div 
+                    <div
                       className={`h-full rounded-full transition-all duration-1000 ease-linear ${timeLeft <= 5 ? 'bg-red-500 animate-pulse' : 'bg-[#7c1f31] dark:bg-[#ff4d6d]'}`}
                       style={{ width: `${(timeLeft / 25) * 100}%` }}
                     ></div>
@@ -373,7 +385,7 @@ export default function AnalyzerView({ topics }: AnalyzerViewProps) {
 
               {appState === 'analyzing' && (
                 <div className="flex justify-center mt-8">
-                  <button 
+                  <button
                     onClick={handleSubmitAnalysis}
                     className="inline-flex items-center justify-center rounded-xl text-lg font-bold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7c1f31] bg-[#7c1f31] text-white hover:bg-[#5a1623] hover:shadow-md h-14 px-10 min-h-[44px]"
                   >
@@ -383,7 +395,7 @@ export default function AnalyzerView({ topics }: AnalyzerViewProps) {
               )}
 
               {appState === 'results' && (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, scale: 0.98 }}
                   animate={{ opacity: 1, scale: 1 }}
                   className="space-y-8"
@@ -400,7 +412,7 @@ export default function AnalyzerView({ topics }: AnalyzerViewProps) {
                             <p className="text-[#1a1a1a]/70 dark:text-white/70">Ai identificat corect {accuracy}% din cuvintele toxice.</p>
                           </div>
                         </div>
-                        
+
                         <div>
                           <h3 className="text-2xl font-bold text-[#1a1a1a] dark:text-white mb-3 flex items-center gap-2">
                             <Brain className="w-6 h-6 text-[#7c1f31] dark:text-[#ff4d6d]" />
@@ -410,7 +422,7 @@ export default function AnalyzerView({ topics }: AnalyzerViewProps) {
                             {articleData.explanation}
                           </p>
                         </div>
-                        
+
                         <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-xl border border-yellow-200 dark:border-yellow-800/30 text-yellow-800 dark:text-yellow-200 text-sm">
                           <strong>Notă despre formatare:</strong> Ai observat cum arăta textul? L-am încadrat intenționat într-un format de {uiStyle === 'facebook' ? 'postare social media' : 'articol de știri premium'}. Acest &quot;Efect de Halo&quot; vizual influențează subconștient cât de multă încredere acordăm informației, chiar înainte de a citi primul cuvânt.
                         </div>
@@ -434,57 +446,57 @@ export default function AnalyzerView({ topics }: AnalyzerViewProps) {
                           </div>
                         </div>
 
-                          <div className="bg-[#e7edeb] dark:bg-white/5 p-6 rounded-2xl border border-[#1a1a1a]/10 dark:border-white/10 flex flex-col h-full">
-                            <h4 className="font-bold text-[#1a1a1a] dark:text-white mb-4 flex items-center gap-2">
-                              <Brain className="w-5 h-5 text-[#7c1f31] dark:text-[#ff4d6d]" />
-                              Amprenta AI (Stilometrie)
-                            </h4>
-                            
-                            <div className="space-y-4 flex-1">
-                              {(() => {
-                                const stylometry = calculateStylometry(articleData.text);
-                                const isAI = stylometry.stdDev < 5 || stylometry.lexicalDiversity < 40;
-                                return (
-                                  <>
-                                    <div>
-                                      <div className="flex justify-between text-sm font-bold text-[#1a1a1a] dark:text-white mb-1">
-                                        <span>Varianța Frazei (Burstiness)</span>
-                                        <span>{stylometry.stdDev}</span>
-                                      </div>
-                                      <div className="w-full bg-gray-200 dark:bg-gray-800 rounded-full h-2">
-                                        <div className="bg-[#7c1f31] dark:bg-[#ff4d6d] h-2 rounded-full" style={{ width: `${Math.min(100, (stylometry.stdDev / 10) * 100)}%` }}></div>
-                                      </div>
-                                    </div>
+                        <div className="bg-[#e7edeb] dark:bg-white/5 p-6 rounded-2xl border border-[#1a1a1a]/10 dark:border-white/10 flex flex-col h-full">
+                          <h4 className="font-bold text-[#1a1a1a] dark:text-white mb-4 flex items-center gap-2">
+                            <Brain className="w-5 h-5 text-[#7c1f31] dark:text-[#ff4d6d]" />
+                            Amprenta AI (Stilometrie)
+                          </h4>
 
-                                    <div>
-                                      <div className="flex justify-between text-sm font-bold text-[#1a1a1a] dark:text-white mb-1">
-                                        <span>Diversitate Lexicală</span>
-                                        <span>{stylometry.lexicalDiversity}%</span>
-                                      </div>
-                                      <div className="w-full bg-gray-200 dark:bg-gray-800 rounded-full h-2">
-                                        <div className="bg-[#1a1a1a] dark:bg-white h-2 rounded-full" style={{ width: `${stylometry.lexicalDiversity}%` }}></div>
-                                      </div>
+                          <div className="space-y-4 flex-1">
+                            {(() => {
+                              const stylometry = calculateStylometry(articleData.text);
+                              const isAI = stylometry.stdDev < 5 || stylometry.lexicalDiversity < 40;
+                              return (
+                                <>
+                                  <div>
+                                    <div className="flex justify-between text-sm font-bold text-[#1a1a1a] dark:text-white mb-1">
+                                      <span>Varianța Frazei (Burstiness)</span>
+                                      <span>{stylometry.stdDev}</span>
                                     </div>
+                                    <div className="w-full bg-gray-200 dark:bg-gray-800 rounded-full h-2">
+                                      <div className="bg-[#7c1f31] dark:bg-[#ff4d6d] h-2 rounded-full" style={{ width: `${Math.min(100, (stylometry.stdDev / 10) * 100)}%` }}></div>
+                                    </div>
+                                  </div>
 
-                                    <div className="pt-4 mt-4 border-t border-[#1a1a1a]/10 dark:border-white/10">
-                                      <div className="flex items-center justify-between">
-                                        <span className="text-xs font-bold uppercase tracking-wider text-[#1a1a1a]/60 dark:text-white/60">Verdict Analiză Locală</span>
-                                        <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest ${isAI ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400' : 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'}`}>
-                                          {isAI ? 'Probabil AI' : 'Probabil Uman'}
-                                        </span>
-                                      </div>
+                                  <div>
+                                    <div className="flex justify-between text-sm font-bold text-[#1a1a1a] dark:text-white mb-1">
+                                      <span>Diversitate Lexicală</span>
+                                      <span>{stylometry.lexicalDiversity}%</span>
                                     </div>
-                                  </>
-                                );
-                              })()}
-                            </div>
+                                    <div className="w-full bg-gray-200 dark:bg-gray-800 rounded-full h-2">
+                                      <div className="bg-[#1a1a1a] dark:bg-white h-2 rounded-full" style={{ width: `${stylometry.lexicalDiversity}%` }}></div>
+                                    </div>
+                                  </div>
+
+                                  <div className="pt-4 mt-4 border-t border-[#1a1a1a]/10 dark:border-white/10">
+                                    <div className="flex items-center justify-between">
+                                      <span className="text-xs font-bold uppercase tracking-wider text-[#1a1a1a]/60 dark:text-white/60">Verdict Analiză Locală</span>
+                                      <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest ${isAI ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400' : 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'}`}>
+                                        {isAI ? 'Probabil AI' : 'Probabil Uman'}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </>
+                              );
+                            })()}
                           </div>
+                        </div>
                       </div>
                     </div>
                   </div>
 
                   <div className="flex justify-center pt-6">
-                    <button 
+                    <button
                       onClick={handlePlayAgain}
                       className="inline-flex items-center justify-center rounded-xl text-lg font-bold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1a1a1a] dark:focus-visible:ring-white bg-white dark:bg-transparent border-2 border-[#1a1a1a] dark:border-white text-[#1a1a1a] dark:text-white hover:bg-[#1a1a1a] dark:hover:bg-white hover:text-white dark:hover:text-[#1a1a1a] h-14 px-10 gap-3 min-h-[44px]"
                     >
