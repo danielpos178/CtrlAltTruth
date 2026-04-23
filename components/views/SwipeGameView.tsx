@@ -131,7 +131,7 @@ export default function SwipeGameView() {
         </div>
       </div>
 
-      <div className="relative w-full aspect-[4/3] max-w-md">
+      <div className="relative w-full aspect-4/3 max-w-md">
         <AnimatePresence mode="wait">
           {!feedback ? (
             <motion.div
@@ -186,14 +186,14 @@ export default function SwipeGameView() {
         <button
           onClick={() => handleSwipe(true)}
           disabled={!!feedback}
-          className="flex-1 h-20 bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-900/50 text-red-700 dark:text-red-300 rounded-2xl font-bold text-xl flex items-center justify-center gap-2 transition-colors disabled:opacity-50 min-h-[44px]"
+          className="flex-1 h-20 bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-900/50 text-red-700 dark:text-red-300 rounded-2xl font-bold text-xl flex items-center justify-center gap-2 transition-colors disabled:opacity-50 min-h-11"
         >
           <X className="w-6 h-6" /> SUSPECT
         </button>
         <button
           onClick={() => handleSwipe(false)}
           disabled={!!feedback}
-          className="flex-1 h-20 bg-green-100 dark:bg-green-900/30 hover:bg-green-200 dark:hover:bg-green-900/50 text-green-700 dark:text-green-300 rounded-2xl font-bold text-xl flex items-center justify-center gap-2 transition-colors disabled:opacity-50 min-h-[44px]"
+          className="flex-1 h-20 bg-green-100 dark:bg-green-900/30 hover:bg-green-200 dark:hover:bg-green-900/50 text-green-700 dark:text-green-300 rounded-2xl font-bold text-xl flex items-center justify-center gap-2 transition-colors disabled:opacity-50 min-h-11"
         >
           <Check className="w-6 h-6" /> CREDIBIL
         </button>
