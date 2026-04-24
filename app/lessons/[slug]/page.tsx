@@ -1,7 +1,13 @@
-import { getLessonBySlug } from "@/lib/fetchData";
+import { getLessonBySlug, getLessons } from "@/lib/fetchData";
 import { notFound } from "next/navigation";
 import LessonDetail from "@/components/views/LessonDetail";
 
+export async function generateStaticParams() {
+	const lessons = await getLessons();
+	return lessons.map((lesson: { slug: string }) => ({
+		slug: lesson.slug,
+	}));
+}
 export const revalidate = 60; // Revalidate every 60 seconds
 
 export default async function SingleLessonPage({
