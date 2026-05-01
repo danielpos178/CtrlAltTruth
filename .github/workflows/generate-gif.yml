@@ -1,32 +1,30 @@
-name: Generate Website Demo GIF
-
+name: Generate Website Demo WebP
 on:
   workflow_dispatch:
-
 permissions:
   contents: write
-
 jobs:
-  generate-gif:
+  generate-webp:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Website to GIF
-        uses: PabloLec/website-to-gif@2.1.5
+      - name: Website to WebP
+        uses: danielpos178/website-to-gif@main
         with:
-          url: "https://ctrl-alt-truth.vercel.app/" 
-          no_scoll: true 
-          time_per_frame: 100
-          time_between_frames: 100
-          number_of_frames: 50
+          url: "https://ctrl-alt-truth.vercel.app/"
+          file_format: "WebP"
           file_name: "demo"
+          no_scroll: true
+          time_per_frame: 50
+          time_between_frames: 50
+          number_of_frames: 100
 
       - name: Commit file to GH repo
         run: |
           git config --global user.name "website-to-gif[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add demo.gif
-          git commit -m "Update website demo GIF" || echo "No changes to commit"
+          git add demo.webp
+          git commit -m "Update website demo WebP" || echo "No changes to commit"
           git push
