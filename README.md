@@ -6,6 +6,7 @@
 ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat&logo=supabase&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
 
+![CtrlAltTruth Demo](./demo.gif)
 
 ## Cuprins
 - [Prezentare Generală](#prezentare-generală)
