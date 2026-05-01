@@ -5,7 +5,7 @@
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat&logo=tailwind-css&logoColor=white)
 ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat&logo=supabase&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
-![Gemini AI](https://img.shields.io/badge/Gemini_AI-8E75B2?style=flat&logo=googlebard&logoColor=white)
+
 
 ## Cuprins
 - [Prezentare Generală](#prezentare-generală)
