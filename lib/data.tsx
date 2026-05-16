@@ -1,4 +1,3 @@
-// Licensed under the GNU AGPL-3.0-only.
 import React from 'react';
 import { ShieldAlert, AlertTriangle, MessageSquareWarning, Fingerprint, Video, Filter, Search } from 'lucide-react';
 

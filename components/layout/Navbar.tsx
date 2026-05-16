@@ -4,15 +4,24 @@ import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { ShieldAlert, BookOpen, Gamepad2, Home, FileText, Menu, X, Sun, Moon, User, LogIn } from 'lucide-react';
+import { ShieldAlert, BookOpen, Gamepad2, Home, FileText, Menu, X, Sun, Moon, User, LogIn, Lock } from 'lucide-react';
 import { useTheme } from '@/components/providers/ThemeProvider';
 import { useAuth } from '@/components/providers/AuthProvider';
 import { AccessibilityMenu } from '@/components/AccessibilityMenu';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { theme, toggleTheme, mounted } = useTheme();
-  const { user, isLoading } = useAuth();
+  const { user, role, isLoading } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
 
@@ -59,29 +68,53 @@ export default function Navbar() {
 
           <div className="flex gap-2 items-center">
             <AccessibilityMenu />
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-lg bg-white dark:bg-[#1a1a1a] border border-[#1a1a1a]/10 dark:border-white/10 text-[#1a1a1a] dark:text-white hover:bg-[#1a1a1a]/5 dark:hover:bg-white/5 transition-all shadow-sm"
-              aria-label={theme === 'light' ? 'Activează modul întunecat' : 'Activează modul luminos'}
-            >
-              {!mounted ? (
-                <div className="w-4 h-4" />
-              ) : theme === 'light' ? (
-                <Moon className="w-4 h-4" />
-              ) : (
-                <Sun className="w-4 h-4" />
-              )}
-            </button>
             
             {!isLoading && (
               user ? (
-                <button
-                  onClick={() => router.push('/profile')}
-                  className={`p-2 rounded-lg border transition-all shadow-sm flex items-center justify-center ${isActive('/profile') ? 'bg-[#7c1f31] text-white border-[#7c1f31]' : 'bg-white dark:bg-[#1a1a1a] border-[#1a1a1a]/10 dark:border-white/10 text-[#1a1a1a] dark:text-white hover:bg-[#1a1a1a]/5 dark:hover:bg-white/5'}`}
-                  aria-label="Profile"
-                >
-                  <User className="w-4 h-4" />
-                </button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="rounded-full outline-none focus:ring-2 focus:ring-[#7c1f31] border border-transparent hover:border-[#1a1a1a]/10 dark:hover:border-white/10 transition-all ml-1">
+                      <Avatar className="w-9 h-9 border border-[#1a1a1a]/10 dark:border-white/10">
+                        <AvatarFallback className="bg-[#7c1f31] text-white text-xs font-bold">
+                          {user.email?.charAt(0).toUpperCase() || 'U'}
+                        </AvatarFallback>
+                      </Avatar>
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56 mt-2">
+                    <DropdownMenuLabel className="font-normal">
+                      <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium leading-none text-[#1a1a1a] dark:text-white">Contul Meu</p>
+                        <p className="text-xs leading-none text-muted-foreground line-clamp-1">
+                          {user.email}
+                        </p>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    {role === 'admin' && (
+                      <>
+                        <DropdownMenuItem onClick={() => router.push('/admin')} className="cursor-pointer text-[#7c1f31] dark:text-[#ff4d6d] focus:bg-[#7c1f31]/10 dark:focus:bg-[#ff4d6d]/10 focus:text-[#7c1f31] dark:focus:text-[#ff4d6d] font-bold">
+                          Panou Administrator
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                      </>
+                    )}
+                    <DropdownMenuItem onClick={() => router.push('/progress')} className="cursor-pointer">
+                      Progresul meu
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => router.push('/settings')} className="cursor-pointer">
+                      Setări cont
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => {
+                        import('@/lib/supabase').then(({ supabase }) => {
+                          supabase.auth.signOut().then(() => router.push('/'));
+                        });
+                      }} className="cursor-pointer text-red-600 dark:text-red-400 focus:bg-red-50 dark:focus:bg-red-900/10 focus:text-red-600 dark:focus:text-red-400">
+                      Deconectare
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               ) : (
                 <button
                   onClick={() => router.push('/login')}
@@ -101,9 +134,9 @@ export default function Navbar() {
           <AccessibilityMenu />
           {!isLoading && user && (
             <button
-               onClick={() => router.push('/profile')}
+               onClick={() => router.push('/progress')}
                className="p-2 text-[#1a1a1a] dark:text-white hover:bg-[#1a1a1a]/10 dark:hover:bg-white/10 rounded-xl min-h-[44px] min-w-[44px] flex items-center justify-center"
-               aria-label="Profile"
+               aria-label="Progres"
              >
                <User className="w-5 h-5" />
              </button>
@@ -117,19 +150,6 @@ export default function Navbar() {
                <LogIn className="w-5 h-5" />
              </button>
           )}
-          <button
-            onClick={toggleTheme}
-            className="p-2 text-[#1a1a1a] dark:text-white hover:bg-[#1a1a1a]/10 dark:hover:bg-white/10 rounded-xl min-h-[44px] min-w-[44px] flex items-center justify-center"
-            aria-label={theme === 'light' ? 'Activează modul întunecat' : 'Activează modul luminos'}
-          >
-            {!mounted ? (
-              <div className="w-5 h-5" />
-            ) : theme === 'light' ? (
-              <Moon className="w-5 h-5" />
-            ) : (
-              <Sun className="w-5 h-5" />
-            )}
-          </button>
           <button 
             className="p-2 text-[#1a1a1a] dark:text-white hover:bg-[#1a1a1a]/10 dark:hover:bg-white/10 rounded-xl min-h-[44px] min-w-[44px] flex items-center justify-center"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}

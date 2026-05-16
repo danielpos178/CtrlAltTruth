@@ -5,10 +5,12 @@ import { ThemeProvider } from '@/components/providers/ThemeProvider';
 import { AuthProvider } from '@/components/providers/AuthProvider';
 import Navbar from '@/components/layout/Navbar';
 import { Toaster } from 'react-hot-toast';
-import { Geist } from "next/font/google";
+import { Geist, Lexend } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { BadgeUnlockModal } from '@/components/ui/BadgeUnlockModal';
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
+const lexend = Lexend({ subsets: ['latin'], variable: '--font-lexend' });
 
 export const viewport: Viewport = {
   themeColor: '#7c1f31',
@@ -29,9 +31,9 @@ export const metadata: Metadata = {
   }
 };
 
-export default function RootLayout({children}: {children: React.ReactNode}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ro" suppressHydrationWarning className={cn("font-sans", geist.variable)}>
+    <html lang="ro" suppressHydrationWarning className={cn("font-sans", geist.variable, lexend.variable)}>
       <head>
         <link rel="apple-touch-icon" href="/icon.svg" />
         <script dangerouslySetInnerHTML={{
@@ -60,6 +62,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
             <main className="max-w-6xl mx-auto px-6 text-[#1a1a1a] dark:text-white/90">
               {children}
             </main>
+            <BadgeUnlockModal />
             <Toaster position="bottom-right" />
           </AuthProvider>
         </ThemeProvider>

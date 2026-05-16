@@ -21,6 +21,7 @@ export default function LandingView() {
     let isResetting = false;
 
     const runInfection = () => {
+      if (document.documentElement.classList.contains('reduced-motion')) return;
       if (isResetting) return;
 
       setDots(currentDots => {
@@ -66,6 +67,10 @@ export default function LandingView() {
 
   // Trigger stats animation after a short delay
   useEffect(() => {
+    if (document.documentElement.classList.contains('reduced-motion')) {
+      setStatsAnimated(true);
+      return;
+    }
     const timer = setTimeout(() => setStatsAnimated(true), 500);
     return () => clearTimeout(timer);
   }, []);

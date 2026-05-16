@@ -3,10 +3,12 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
+import { logDailyActivity } from '@/lib/gamification';
 
 interface AuthContextType {
   user: User | null;
   session: Session | null;
+  role: 'admin' | 'user' | null;
   isLoading: boolean;
   signOut: () => Promise<void>;
 }
@@ -14,6 +16,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({
   user: null,
   session: null,
+  role: null,
   isLoading: true,
   signOut: async () => {},
 });
@@ -21,7 +24,21 @@ const AuthContext = createContext<AuthContextType>({
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
+  const [role, setRole] = useState<'admin' | 'user' | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const fetchRole = async (userId: string) => {
+    try {
+      const { data } = await supabase.from('user_roles').select('role').eq('user_id', userId).maybeSingle();
+      if (data) {
+        setRole(data.role);
+      } else {
+        setRole('user');
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   useEffect(() => {
     // Get initial session
@@ -32,6 +49,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         
         setSession(session);
         setUser(session?.user ?? null);
+        
+        if (session?.user) {
+          logDailyActivity(session.user.id).catch(console.error);
+          await fetchRole(session.user.id);
+        } else {
+          setRole(null);
+        }
       } catch (error: any) {
         console.error('Error getting session:', error);
         if (error.message?.includes('Refresh Token Not Found') || error.message?.includes('Invalid Refresh Token')) {
@@ -46,9 +70,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      async (_event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
+        if (session?.user) {
+          await fetchRole(session.user.id);
+        } else {
+          setRole(null);
+        }
         setIsLoading(false);
       }
     );
@@ -63,7 +92,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, isLoading, signOut }}>
+    <AuthContext.Provider value={{ user, session, role, isLoading, signOut }}>
       {children}
     </AuthContext.Provider>
   );
