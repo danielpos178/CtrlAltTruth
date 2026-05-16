@@ -50,7 +50,8 @@ export default function AnalyzerView({ topics }: AnalyzerViewProps) {
   useEffect(() => {
     const hasSeenTutorial = localStorage.getItem('hasSeenAnalyzerTutorial');
     if (!hasSeenTutorial) {
-      setShowTutorial(true);
+      const timer = setTimeout(() => setShowTutorial(true), 0);
+      return () => clearTimeout(timer);
     }
   }, []);
 
@@ -120,6 +121,7 @@ export default function AnalyzerView({ topics }: AnalyzerViewProps) {
       data.toxicWords = data.toxicWords.map((w: string) => cleanWord(w));
       setArticleData(data);
       setSelectedWordIndices([]);
+      // eslint-disable-next-line react-hooks/purity
       setUiStyle(Math.random() > 0.5 ? 'facebook' : 'news');
       setAppState('analyzing');
       startTimer();
