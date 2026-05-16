@@ -1,10 +1,11 @@
 "use client"
 
 import React, { useEffect, useState, useRef } from "react"
-import { Globe, Accessibility, Minus, Plus, RefreshCcw, Type, MonitorSmartphone, Sunrise } from "lucide-react"
+import { Globe, Settings2, Minus, Plus, RefreshCcw, Type, MonitorSmartphone, Sunrise, Moon, Sun } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
+import { useTheme } from '@/components/providers/ThemeProvider'
 
 // Languages supported by Google Translate
 const languages = [
@@ -45,6 +46,8 @@ const defaultPrefs: A11yPrefs = {
 export function AccessibilityMenu() {
   const [mounted, setMounted] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
+  
+  const { theme, toggleTheme, mounted: themeMounted } = useTheme();
   
   // A11y State
   const [prefs, setPrefs] = useState<A11yPrefs>(defaultPrefs)
@@ -185,7 +188,7 @@ export function AccessibilityMenu() {
   if (!mounted) {
     return (
       <div className="p-2 rounded-lg border border-[#1a1a1a]/10 dark:border-white/10 text-[#1a1a1a] dark:text-white bg-white dark:bg-[#1a1a1a]">
-        <Accessibility className="h-4 w-4" />
+        <Settings2 className="h-4 w-4" />
       </div>
     )
   }
@@ -235,7 +238,7 @@ export function AccessibilityMenu() {
     <div className="notranslate">
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger className="flex items-center gap-1.5 p-2 rounded-lg border bg-white dark:bg-[#1a1a1a] border-[#1a1a1a]/10 dark:border-white/10 text-[#1a1a1a] dark:text-white hover:bg-[#1a1a1a]/5 dark:hover:bg-white/5 transition-all shadow-sm outline-none" aria-label="Meniu de accesibilitate și traducere">
-          <Accessibility className="h-4 w-4" />
+          <Settings2 className="h-4 w-4" />
         </PopoverTrigger>
         <PopoverContent 
           align="end" 
@@ -244,7 +247,7 @@ export function AccessibilityMenu() {
         >
           {/* Header */}
           <div className="flex items-center gap-2 border-b border-[#1a1a1a]/10 dark:border-white/10 pb-3">
-            <Accessibility className="w-5 h-5 text-[#7c1f31] dark:text-[#ff4d6d]" />
+            <Settings2 className="w-5 h-5 text-[#7c1f31] dark:text-[#ff4d6d]" />
             <h3 className="font-bold text-lg leading-none">Accesibilitate</h3>
           </div>
 
@@ -287,6 +290,18 @@ export function AccessibilityMenu() {
 
           {/* Settings Group: Toggles */}
           <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="a11y-darkmode" className="text-sm font-medium flex items-center gap-2 cursor-pointer">
+                {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />} Mod Întunecat
+              </Label>
+              <Switch 
+                id="a11y-darkmode" 
+                checked={theme === 'dark'} 
+                onCheckedChange={toggleTheme} 
+                disabled={!themeMounted}
+              />
+            </div>
+
             <div className="flex items-center justify-between">
               <Label htmlFor="a11y-contrast" className="text-sm font-medium flex items-center gap-2 cursor-pointer">
                 <Sunrise className="w-4 h-4" /> Contrast Ridicat

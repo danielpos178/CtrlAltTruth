@@ -1,5 +1,3 @@
-/* Licensed under the GNU AGPL-3.0-only.*/
-
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -237,14 +235,29 @@
 }
 
 /* Accessibility Preferences */
-html.reduced-motion * {
-  animation: none !important;
-  transition: none !important;
+html.reduced-motion *, html.reduced-motion {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
   scroll-behavior: auto !important;
 }
 
+/* Disable hover and active motion */
+html.reduced-motion .hover\:-translate-y-1:hover,
+html.reduced-motion .active\:scale-95:active,
+html.reduced-motion .group:hover .group-hover\:scale-110,
+html.reduced-motion .group:hover .group-hover\:rotate-3,
+html.reduced-motion .group-hover\:scale-105:hover,
+html.reduced-motion .group-hover\:scale-105,
+html.reduced-motion .hover\:scale-105:hover {
+  transform: none !important;
+}
+
 html.dyslexia-font, html.dyslexia-font * {
-  font-family: 'Comic Sans MS', 'OpenDyslexic', sans-serif !important;
+  font-family: var(--font-lexend), 'Comic Sans MS', sans-serif !important;
+  letter-spacing: 0.05em !important;
+  word-spacing: 0.1em !important;
+  line-height: 1.6 !important;
 }
 
 html.theme-high-contrast {

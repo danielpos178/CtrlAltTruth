@@ -1,7 +1,7 @@
 {
   "name": "Ctrl+Alt+Truth",
-  "short_name": "CtrlAltTruth",
-  "description": "Învață să detectezi manipularea și dezinformarea",
+  "short_name": "TruthLab",
+  "description": "Laboratorul de Adevăr - Învață să detectezi manipularea și dezinformarea.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#e7edeb",

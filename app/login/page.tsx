@@ -28,7 +28,7 @@ export default function LoginPage() {
         throw error;
       }
 
-      router.push('/profile');
+      router.push('/progress');
       router.refresh(); // Refresh to update navbar state
     } catch (err: any) {
       setError(err.message || 'A apărut o eroare la autentificare.');
