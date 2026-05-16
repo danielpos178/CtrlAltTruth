@@ -26,7 +26,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: process.env.CI ? 'npx serve@latest out -l 3000' : 'pnpm dev',
+    command: process.env.CI ? 'pnpm build && pnpm start' : 'pnpm dev',
     url: 'http://127.0.0.1:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
