@@ -8,7 +8,7 @@ import { logDailyActivity } from '@/lib/gamification';
 interface AuthContextType {
   user: User | null;
   session: Session | null;
-  role: 'admin' | 'user' | null;
+  role: 'admin' | 'student' | 'profesor' | 'user' | null;
   isLoading: boolean;
   signOut: () => Promise<void>;
 }
@@ -24,7 +24,7 @@ const AuthContext = createContext<AuthContextType>({
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
-  const [role, setRole] = useState<'admin' | 'user' | null>(null);
+  const [role, setRole] = useState<'admin' | 'student' | 'profesor' | 'user' | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchRole = async (userId: string) => {

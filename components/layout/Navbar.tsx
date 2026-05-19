@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { ShieldAlert, BookOpen, Gamepad2, Home, FileText, Menu, X, Sun, Moon, User, LogIn, Lock } from 'lucide-react';
+import { ShieldAlert, BookOpen, Gamepad2, Home, FileText, Menu, X, Sun, Moon, User, LogIn, Lock, Flame } from 'lucide-react';
 import { useTheme } from '@/components/providers/ThemeProvider';
 import { useAuth } from '@/components/providers/AuthProvider';
 import { AccessibilityMenu } from '@/components/AccessibilityMenu';
@@ -17,18 +17,49 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
-export default function Navbar() {
+export default function Navbar({ userStreak }: { userStreak?: { current_streak: number, last_activity_date: string } | null }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { theme, toggleTheme, mounted } = useTheme();
   const { user, role, isLoading } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
+  
+  // Hydration safety for dates
+  const [isActiveToday, setIsActiveToday] = useState(false);
+  const [displayStreak, setDisplayStreak] = useState(0);
+  
+  useEffect(() => {
+    if (userStreak) {
+      const today = new Date();
+      const todayStr = [
+        today.getUTCFullYear(),
+        String(today.getUTCMonth() + 1).padStart(2, '0'),
+        String(today.getUTCDate()).padStart(2, '0')
+      ].join('-');
+      
+      const yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000);
+      const yesterdayStr = [
+        yesterday.getUTCFullYear(),
+        String(yesterday.getUTCMonth() + 1).padStart(2, '0'),
+        String(yesterday.getUTCDate()).padStart(2, '0')
+      ].join('-');
+      
+      const lastDate = userStreak.last_activity_date;
+      setIsActiveToday(lastDate === todayStr);
+
+      if (lastDate === todayStr || lastDate === yesterdayStr) {
+        setDisplayStreak(userStreak.current_streak);
+      } else {
+        setDisplayStreak(0); // Streak broken
+      }
+    }
+  }, [userStreak]);
 
   const navItems = [
     { href: '/', label: 'Acasă', icon: Home },
-    { href: '/analyzer', label: 'Laboratorul de Adevăr', icon: ShieldAlert },
-    { href: '/swipegame', label: 'Swipe Game', icon: Gamepad2 },
+    { href: '/activitati', label: 'Activități', icon: Gamepad2 },
     { href: '/lessons', label: 'Lecții', icon: BookOpen },
     { href: '/documentation', label: 'Documentație', icon: FileText },
   ] as const;
@@ -68,6 +99,29 @@ export default function Navbar() {
 
           <div className="flex gap-2 items-center">
             <AccessibilityMenu />
+
+            {!isLoading && user && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="flex items-center gap-1 bg-white dark:bg-[#1a1a1a] px-2 py-1.5 rounded-xl border border-[#1a1a1a]/10 dark:border-white/10 shadow-sm ml-1 cursor-help transition-transform hover:scale-105">
+                      <Flame 
+                        className={`w-4 h-4 ${isActiveToday ? 'text-orange-500 fill-orange-500 animate-pulse' : 'text-muted-foreground fill-none'}`} 
+                      />
+                      <span className={`text-xs font-bold ${isActiveToday ? 'text-orange-500' : 'text-muted-foreground'}`}>
+                        {displayStreak}
+                      </span>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" align="center" className="bg-[#1a1a1a] text-white border-0 font-medium shadow-xl">
+                    {isActiveToday 
+                      ? `Serie de ${displayStreak} ${displayStreak === 1 ? 'zi consecutivă' : 'zile consecutive'}! Scutul tău digital este activ și protejat astăzi.`
+                      : `Serie de ${displayStreak} ${displayStreak === 1 ? 'zi' : 'zile'}. Completează o activitate acum pentru a nu-ți pierde flacăra!`
+                    }
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
             
             {!isLoading && (
               user ? (
@@ -75,6 +129,9 @@ export default function Navbar() {
                   <DropdownMenuTrigger asChild>
                     <button className="rounded-full outline-none focus:ring-2 focus:ring-[#7c1f31] border border-transparent hover:border-[#1a1a1a]/10 dark:hover:border-white/10 transition-all ml-1">
                       <Avatar className="w-9 h-9 border border-[#1a1a1a]/10 dark:border-white/10">
+                        {user.user_metadata?.avatar_url && (
+                          <AvatarImage src={user.user_metadata.avatar_url} alt="Profile Avatar" />
+                        )}
                         <AvatarFallback className="bg-[#7c1f31] text-white text-xs font-bold">
                           {user.email?.charAt(0).toUpperCase() || 'U'}
                         </AvatarFallback>
@@ -94,13 +151,17 @@ export default function Navbar() {
                     {role === 'admin' && (
                       <>
                         <DropdownMenuItem onClick={() => router.push('/admin')} className="cursor-pointer text-[#7c1f31] dark:text-[#ff4d6d] focus:bg-[#7c1f31]/10 dark:focus:bg-[#ff4d6d]/10 focus:text-[#7c1f31] dark:focus:text-[#ff4d6d] font-bold">
-                          Panou Administrator
+                          Panou Admin
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                       </>
                     )}
-                    <DropdownMenuItem onClick={() => router.push('/progress')} className="cursor-pointer">
-                      Progresul meu
+                    <DropdownMenuItem onClick={() => router.push('/clase')} className="cursor-pointer text-[#7c1f31] dark:text-[#ff4d6d] focus:bg-[#7c1f31]/10 dark:focus:bg-[#ff4d6d]/10 focus:text-[#7c1f31] dark:focus:text-[#ff4d6d] font-bold">
+                      {role === 'profesor' || role === 'admin' ? 'Gestionare Clase' : 'Clasele Mele'}
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => router.push('/progres')} className="cursor-pointer">
+                      Progresul Meu
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => router.push('/settings')} className="cursor-pointer">
                       Setări cont
@@ -133,12 +194,29 @@ export default function Navbar() {
         <div className="flex md:hidden items-center gap-2">
           <AccessibilityMenu />
           {!isLoading && user && (
+            <div className="flex items-center gap-1 bg-white dark:bg-[#1a1a1a] px-2 py-1.5 rounded-xl border border-[#1a1a1a]/10 dark:border-white/10 shadow-sm ml-1" onClick={() => router.push('/progres')}>
+              <Flame 
+                className={`w-4 h-4 ${isActiveToday ? 'text-orange-500 fill-orange-500 animate-pulse' : 'text-muted-foreground fill-none'}`} 
+              />
+              <span className={`text-xs font-bold ${isActiveToday ? 'text-orange-500' : 'text-muted-foreground'}`}>
+                {displayStreak}
+              </span>
+            </div>
+          )}
+          {!isLoading && user && (
             <button
-               onClick={() => router.push('/progress')}
+               onClick={() => router.push('/progres')}
                className="p-2 text-[#1a1a1a] dark:text-white hover:bg-[#1a1a1a]/10 dark:hover:bg-white/10 rounded-xl min-h-[44px] min-w-[44px] flex items-center justify-center"
                aria-label="Progres"
              >
-               <User className="w-5 h-5" />
+               <Avatar className="w-6 h-6 border border-[#1a1a1a]/10 dark:border-white/10">
+                 {user.user_metadata?.avatar_url && (
+                   <AvatarImage src={user.user_metadata.avatar_url} alt="Profile Avatar" />
+                 )}
+                 <AvatarFallback className="bg-[#7c1f31] text-white text-[10px] font-bold">
+                   {user.email?.charAt(0).toUpperCase() || 'U'}
+                 </AvatarFallback>
+               </Avatar>
              </button>
           )}
           {!isLoading && !user && (

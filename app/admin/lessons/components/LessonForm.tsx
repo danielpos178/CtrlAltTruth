@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod';
 import dynamic from 'next/dynamic';
 import { createLesson, updateLesson } from '../../actions';
@@ -29,7 +29,7 @@ export function LessonForm({ editingLesson, onCancelEdit }: { editingLesson?: an
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { register, handleSubmit, control, formState: { errors }, reset } = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema as any),
+    resolver: zodResolver(schema),
     defaultValues: {
       content: 'Scrie textul lecției aici folosind **Markdown**...',
       icon_name: 'BookOpen',
@@ -63,21 +63,21 @@ export function LessonForm({ editingLesson, onCancelEdit }: { editingLesson?: an
     setIsSubmitting(true);
     try {
       if (editingLesson) {
-         const res = await updateLesson(editingLesson.id, data);
-         if (res.error) {
-           toast.error(res.error);
-         } else {
-           toast.success('Lecția a fost actualizată!');
-           if (onCancelEdit) onCancelEdit();
-         }
+        const res = await updateLesson(editingLesson.id, data);
+        if (res.error) {
+          toast.error(res.error);
+        } else {
+          toast.success('Lecția a fost actualizată!');
+          if (onCancelEdit) onCancelEdit();
+        }
       } else {
-         const res = await createLesson(data);
-         if (res.error) {
-           toast.error(res.error);
-         } else {
-           toast.success('Lecția a fost creată cu succes!');
-           reset();
-         }
+        const res = await createLesson(data);
+        if (res.error) {
+          toast.error(res.error);
+        } else {
+          toast.success('Lecția a fost creată cu succes!');
+          reset();
+        }
       }
     } catch {
       toast.error('A apărut o eroare.');
@@ -94,75 +94,75 @@ export function LessonForm({ editingLesson, onCancelEdit }: { editingLesson?: an
           {editingLesson ? 'Editează Lecția' : 'Adaugă Lecție Nouă'}
         </h2>
         {editingLesson && (
-           <button onClick={onCancelEdit} className="text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-full transition-colors flex items-center gap-2 text-sm font-bold">
-             <X className="w-4 h-4" /> Anulează
-           </button>
+          <button onClick={onCancelEdit} className="text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-full transition-colors flex items-center gap-2 text-sm font-bold">
+            <X className="w-4 h-4" /> Anulează
+          </button>
         )}
       </div>
-      
+
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-           <div className="space-y-2">
+          <div className="space-y-2">
             <label className="font-bold text-sm block">Titlu Lecție</label>
-            <input 
-              {...register('title')} 
+            <input
+              {...register('title')}
               placeholder="Ex: Cum funcționează Deepfakes"
               className="w-full px-4 py-2 bg-gray-50 dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl"
             />
-            {errors.title && <p className="text-red-500 text-xs flex items-center gap-1"><AlertCircle className="w-3 h-3"/>{errors.title.message}</p>}
-           </div>
-           
-           <div className="space-y-2">
+            {errors.title && <p className="text-red-500 text-xs flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors.title.message}</p>}
+          </div>
+
+          <div className="space-y-2">
             <label className="font-bold text-sm block">Slug (URL)</label>
-            <input 
-              {...register('slug')} 
+            <input
+              {...register('slug')}
               placeholder="ex: cum-functioneaza-deepfakes"
               className="w-full px-4 py-2 bg-gray-50 dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl"
             />
-            {errors.slug && <p className="text-red-500 text-xs flex items-center gap-1"><AlertCircle className="w-3 h-3"/>{errors.slug.message}</p>}
-           </div>
+            {errors.slug && <p className="text-red-500 text-xs flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors.slug.message}</p>}
+          </div>
 
-           <div className="space-y-2">
+          <div className="space-y-2">
             <label className="font-bold text-sm block">Nivel Dificultate</label>
-            <input 
-              {...register('level')} 
+            <input
+              {...register('level')}
               placeholder="ex: Începător, Intermediar"
               className="w-full px-4 py-2 bg-gray-50 dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl"
             />
-            {errors.level && <p className="text-red-500 text-xs flex items-center gap-1"><AlertCircle className="w-3 h-3"/>{errors.level.message}</p>}
-           </div>
+            {errors.level && <p className="text-red-500 text-xs flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors.level.message}</p>}
+          </div>
 
-           <div className="space-y-2">
+          <div className="space-y-2">
             <label className="font-bold text-sm block">Nume Iconiță (ex: Search, FileText)</label>
-            <input 
-              {...register('icon_name')} 
+            <input
+              {...register('icon_name')}
               placeholder="ex: Search"
               className="w-full px-4 py-2 bg-gray-50 dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl"
             />
-            {errors.icon_name && <p className="text-red-500 text-xs flex items-center gap-1"><AlertCircle className="w-3 h-3"/>{errors.icon_name.message}</p>}
-           </div>
+            {errors.icon_name && <p className="text-red-500 text-xs flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors.icon_name.message}</p>}
+          </div>
         </div>
 
         <div className="space-y-2" data-color-mode="light">
           <label className="font-bold text-sm block dark:text-white">Conținut Lecție (Markdown)</label>
           <div className="border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
-             <Controller
-               name="content"
-               control={control}
-               render={({ field }) => (
-                 <MDEditor
-                   value={field.value}
-                   onChange={field.onChange}
-                   height={400}
-                 />
-               )}
-             />
+            <Controller
+              name="content"
+              control={control}
+              render={({ field }) => (
+                <MDEditor
+                  value={field.value}
+                  onChange={field.onChange}
+                  height={400}
+                />
+              )}
+            />
           </div>
-          {errors.content && <p className="text-red-500 text-xs flex items-center gap-1"><AlertCircle className="w-3 h-3"/>{errors.content.message}</p>}
+          {errors.content && <p className="text-red-500 text-xs flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors.content.message}</p>}
         </div>
 
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           disabled={isSubmitting}
           className={`px-6 py-3 font-bold rounded-xl transition-colors disabled:opacity-50 text-white ${editingLesson ? 'bg-[#5a1624] hover:bg-[#43101b]' : 'bg-[#7c1f31] hover:bg-[#5a1624]'}`}
         >

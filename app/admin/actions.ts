@@ -20,10 +20,14 @@ const lessonSchema = z.object({
   level: z.string().min(2, 'Nivelul este obligatoriu (ex: Începător)'),
 });
 
+const topicSchema = z.object({
+  id: z.string().min(2, 'ID-ul este prea scurt'),
+  title: z.string().min(3, 'Titlul este prea scurt'),
+  icon_name: z.string().min(1, 'Selectează o iconiță'),
+  description: z.string().min(5, 'Descrierea este prea scurt'),
+});
+
 // Since standard user isn't allowed to insert, we must use the service role OR if RLS allows admin users we can use normal client.
-// Wait! Our RLS explicitly checks:
-// EXISTS (SELECT 1 FROM user_roles WHERE user_id = auth.uid() AND role = 'admin')
-// So we can use the regular authenticated client!
 async function getAuthClient() {
   const cookieStore = await cookies();
   return createServerClient(
@@ -40,6 +44,45 @@ async function getAuthClient() {
       },
     }
   );
+}
+
+export async function createTopic(data: z.infer<typeof topicSchema>) {
+  const supabase = await getAuthClient();
+  const parsed = topicSchema.safeParse(data);
+  if (!parsed.success) return { error: parsed.error.issues[0].message };
+
+  const { error } = await supabase.from('topics').insert([parsed.data]);
+  if (error) {
+    if (error.code === '23505') return { error: 'ID-ul trebuie să fie unic.' };
+    return { error: 'Eroare la adăugarea topicului: ' + error.message };
+  }
+
+  revalidatePath('/admin/analyzer');
+  revalidatePath('/analyzer');
+  return { success: true };
+}
+
+export async function updateTopic(id: string, data: z.infer<typeof topicSchema>) {
+  const supabase = await getAuthClient();
+  const parsed = topicSchema.safeParse(data);
+  if (!parsed.success) return { error: parsed.error.issues[0].message };
+
+  const { error } = await supabase.from('topics').update(parsed.data).eq('id', id);
+  if (error) return { error: 'Eroare la actualizarea topicului: ' + error.message };
+
+  revalidatePath('/admin/analyzer');
+  revalidatePath('/analyzer');
+  return { success: true };
+}
+
+export async function deleteTopic(id: string) {
+  const supabase = await getAuthClient();
+  const { error } = await supabase.from('topics').delete().eq('id', id);
+  if (error) return { error: 'Eroare la ștergere: ' + error.message };
+  
+  revalidatePath('/admin/analyzer');
+  revalidatePath('/analyzer');
+  return { success: true };
 }
 
 export async function createLesson(data: z.infer<typeof lessonSchema>) {

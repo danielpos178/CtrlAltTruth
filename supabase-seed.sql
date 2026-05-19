@@ -99,3 +99,118 @@ INSERT INTO badges (name, description, icon_name, criteria) VALUES
 ('Adevăr Absolut', 'Ai finalizat toate lecțiile.', 'Trophy', 'all_lessons'),
 ('Consecvent', 'Ai fost activ astăzi în aplicație.', 'Flame', 'daily_activity')
 ON CONFLICT DO NOTHING;
+
+-- 5. Fallacies Sandbox
+INSERT INTO fallacies_registry (id, name, definition, example) VALUES
+(1, 'Atacul la Persoană (Ad Hominem)', 'Atacarea caracterului sau motivelor unei persoane în loc de argumentele sale.', 'Nu-l ascultați pe Popescu când vorbește despre economie, uită-te cum se îmbracă!'),
+(2, 'Panta Alunecoasă (Slippery Slope)', 'Aserțiunea că un eveniment va duce la o reacție în lanț extremă, fără dovezi suficiente.', 'Dacă interzicem pungile de plastic, în curând vom interzice și mașinile, iar apoi ne vom întoarce în peșteri!'),
+(3, 'Falsa Dilemă (False Dilemma)', 'Prezentarea a doar două opțiuni ca fiind singurele posibile, când de fapt există mai multe.', 'Fie ești cu noi, fie ești împotriva noastră.'),
+(4, 'Omul de Paie (Straw Man)', 'Simplificarea, exagerarea sau denaturarea argumentului adversarului pentru a fi mai ușor de atacat.', 'Tu spui că ar trebui să investim mai mult în educație, deci vrei să lăsăm armata fără niciun ban și să fim cuceriți!'),
+(5, 'Apelul la Autoritate (Appeal to Authority)', 'Invocarea opiniei unui expert (adesea fals sau dintr-un domeniu irelevant) ca argument suprem.', 'Acest șampon e grozav, chiar și actorul din acel film de acțiune a spus asta!'),
+(6, 'Falsa Cauză (False Cause)', 'Presupunerea că dacă un eveniment urmează după altul, primul l-a cauzat pe al doilea (Corelația nu înseamnă cauzalitate).', 'Când a început să scadă numărul piratilor din lume, a început încălzirea globală. Deci lipsa piraților cauzează încălzirea.'),
+(7, 'Generalizarea Pripită (Hasty Generalization)', 'Extragerea unei concluzii generale pe baza unui eșantion prea mic sau nereprezentativ.', 'Am întâlnit doi francezi nepoliticoși, clar toți francezii sunt nepoliticoși.')
+ON CONFLICT (id) DO UPDATE SET
+  name = EXCLUDED.name,
+  definition = EXCLUDED.definition,
+  example = EXCLUDED.example;
+
+-- 7. Mock Users and Streaks (for demonstration)
+DO $$
+DECLARE
+    dummy_teacher UUID := '00000000-0000-0000-0000-000000000001'::uuid;
+    dummy_student1 UUID := '11111111-1111-1111-1111-111111111111'::uuid;
+    dummy_student2 UUID := '22222222-2222-2222-2222-222222222222'::uuid;
+    dummy_student3 UUID := '33333333-3333-3333-3333-333333333333'::uuid;
+    new_class_id UUID;
+BEGIN
+    -- Insert dummy users into auth.users (local dev)
+    INSERT INTO auth.users (id, instance_id, email) VALUES (dummy_teacher, '00000000-0000-0000-0000-000000000000', 'profesor@scoala.ro') ON CONFLICT (id) DO NOTHING;
+    INSERT INTO auth.users (id, instance_id, email) VALUES (dummy_student1, '00000000-0000-0000-0000-000000000000', 'student1@scoala.ro') ON CONFLICT (id) DO NOTHING;
+    INSERT INTO auth.users (id, instance_id, email) VALUES (dummy_student2, '00000000-0000-0000-0000-000000000000', 'student2@scoala.ro') ON CONFLICT (id) DO NOTHING;
+    INSERT INTO auth.users (id, instance_id, email) VALUES (dummy_student3, '00000000-0000-0000-0000-000000000000', 'student3@scoala.ro') ON CONFLICT (id) DO NOTHING;
+
+    -- Create Class
+    INSERT INTO classes (name, code, teacher_id) 
+    VALUES ('Clasa a 10-a B', 'RO-74X2', dummy_teacher)
+    ON CONFLICT (code) DO NOTHING
+    RETURNING id INTO new_class_id;
+
+    IF new_class_id IS NULL THEN
+        SELECT id INTO new_class_id FROM classes WHERE code = 'RO-74X2';
+    END IF;
+
+    -- Set roles
+    INSERT INTO user_roles (user_id, role, class_id, is_senior_mode, initial_score) 
+    VALUES (dummy_teacher, 'profesor', NULL, false, 0) ON CONFLICT (user_id) DO NOTHING;
+    INSERT INTO user_roles (user_id, role, class_id, is_senior_mode, initial_score) 
+    VALUES (dummy_student1, 'student', new_class_id, false, 30) ON CONFLICT (user_id) DO NOTHING;
+    INSERT INTO user_roles (user_id, role, class_id, is_senior_mode, initial_score) 
+    VALUES (dummy_student2, 'student', new_class_id, false, 40) ON CONFLICT (user_id) DO NOTHING;
+    INSERT INTO user_roles (user_id, role, class_id, is_senior_mode, initial_score) 
+    VALUES (dummy_student3, 'student', new_class_id, false, 50) ON CONFLICT (user_id) DO NOTHING;
+    
+    -- Displaying a user with an active streak (played today)
+    INSERT INTO user_streaks (user_id, current_streak, longest_streak, last_activity_date)
+    VALUES (dummy_student1, 5, 12, CURRENT_DATE AT TIME ZONE 'UTC') ON CONFLICT (user_id) DO NOTHING;
+    
+    -- Displaying a user with a broken streak (played 2 days ago)
+    INSERT INTO user_streaks (user_id, current_streak, longest_streak, last_activity_date)
+    VALUES (dummy_student2, 1, 14, (CURRENT_DATE AT TIME ZONE 'UTC') - INTEGER '2') ON CONFLICT (user_id) DO NOTHING;
+    
+    -- Historical Evolution Data (Swipe Game Scores over time for dummy_student1)
+    INSERT INTO swipe_game_scores (user_id, score, created_at) VALUES 
+    (dummy_student1, 40, (CURRENT_DATE AT TIME ZONE 'UTC') - INTERVAL '28 days'),
+    (dummy_student1, 45, (CURRENT_DATE AT TIME ZONE 'UTC') - INTERVAL '21 days'),
+    (dummy_student1, 55, (CURRENT_DATE AT TIME ZONE 'UTC') - INTERVAL '14 days'),
+    (dummy_student1, 65, (CURRENT_DATE AT TIME ZONE 'UTC') - INTERVAL '7 days'),
+    (dummy_student1, 80, (CURRENT_DATE AT TIME ZONE 'UTC'));
+
+EXCEPTION
+    WHEN OTHERS THEN
+        -- Safely ignore if auth.users is restricted
+END $$;
+
+SELECT setval('fallacies_registry_id_seq', (SELECT MAX(id) FROM fallacies_registry));
+
+INSERT INTO fallacy_challenges (text_content, correct_fallacy_id, explanation, hint) VALUES
+('Cum poți să o crezi? Primarul propune un nou parc, dar știm cu toții că fratele ei a fost închis pentru corupție!', 1, 'Acesta este un atac la persoană (Ad Hominem). Argumentul ignoră propunerea (parcul) și se concentrează pe o problemă familială nerelevantă.', 'Argumentul se leagă de persoană sau de propunere?'),
+('Dacă le dăm voie elevilor să folosească telefoanele în pauze, mâine vor copia la teze, iar poimâine vom avea o generație de analfabeți!', 2, 'Aceasta este Panta Alunecoasă. Se face un salt nejustificat de la folosirea telefoanelor în pauze la o generație de analfabeți.', 'Observă reacția în lanț extremă și nejustificată.'),
+('În această campanie, avem de ales: fie votăm pentru candidatul X și salvăm țara, fie votăm cu Y și mergem spre prăbușire totală.', 3, 'Aceasta este Falsa Dilemă. Sunt prezentate doar două opțiuni extreme, ignorând orice altă nuanță sau candidat.', 'Sunt cu adevărat doar două opțiuni?'),
+('Criticii spun că ar trebui să avem un control mai strict al deșeurilor. Evident, acești critici vor să distrugă complet economia locală!', 4, 'Acesta este Omul de Paie. Se denaturează argumentul inițial și este transformat într-o propunere extremă (distrugerea economiei).', 'A propus cineva cu adevărat asta?'),
+('O persoană de la suport tehnic abia vorbea engleză, deci tot suportul tehnic de la compania aia e îngrozitor.', 7, 'Aceasta este o Generalizare Pripită. Se trage o concluzie despre întreaga companie pe baza unei singure interacțiuni.', 'E corect să judeci tot setul pe baza unui singur exemplu?'),
+('Vărul meu mi-a spus că vaccinurile nu sunt sigure, și el e foarte deștept, e contabil.', 5, 'Acesta este un Apel la Autoritate fals. Faptul că cineva e contabil nu înseamnă că e un expert în imunologie.', 'Este persoana o autoritate în domeniul discutat?'),
+('De când am cumpărat o amuletă norocoasă, n-am mai răcit deloc. Amuleta mă protejează de viruși!', 6, 'Aceasta este o Falsă Cauză. Doar pentru că ai rămas sănătos după ce ai luat amuleta, nu înseamnă că amuleta este motivul.', 'Faptul că s-au întâmplat în același timp înseamnă că una o cauzează pe cealaltă?'),
+('Am băut ieri o sticlă de suc de portocale, iar azi nu mă mai doare capul. Sucul de portocale vindecă migrenele!', 6, 'Accident sau legătură falsă. Vindecarea capului putea avea loc oricum (Falsa Cauză).', 'Nu confunda succesiunea a două lucruri cu o relație de tip cauză-efect.'),
+('Profesorul nostru de istorie a spus că ar trebui să citim mai mult acasă. Așa că el vrea practic să nu mai avem niciun moment liber, să nu mai ieșim cu prietenii și să fim sclavi ai cărților!', 4, 'Este un clasic Om de Paie. A exagerat declarația profesorului de istorie ("să citim mai mult") într-o cerință absurdă.', 'A spus persoana exact asta sau a fost modificat mesajul ei în mod ridicol?'),
+('Candidatul nostru nu este vinovat pentru problemele economiei. Dar hei, ați văzut ce cravată groaznică a purtat contracandidatul aseară la dezbatere?', 1, 'Acesta este fix un Ad Hominem: deturnarea discuției serioase despre ceva către o trăsătură personală (cravata).', 'Trece discuția de la un subiect la atacuri / detalii personale?');
+
+-- 6. Verification Scenarios
+INSERT INTO verification_scenarios (title, author_name, author_metadata, publish_date, date_metadata, image_url, cross_check_metadata, domain_name, domain_metadata, content_excerpt, content_metadata, is_published) VALUES
+(
+  'Descoperire Șocantă: Apa este Toxică!',
+  'Dr. Falsulescu',
+  '{"bio": "Expert independent în toxicologie...", "followers": 150, "is_verified": false}'::jsonb,
+  '5 Iunie 2021',
+  '{"actual_date": "2021-06-05", "explanation": "Acest articol a apărut prima oară în 2021, dar este repostat frecvent ca fiind «de ultimă oră»", "is_recent": false}'::jsonb,
+  'https://picsum.photos/seed/toxicwater/800/600',
+  '{"source_found": "Site de Păcăleli / Satiră", "is_reliable": false}'::jsonb,
+  'stirile-adevarate.xyz',
+  '{"analysis": "Domeniul folosește o extensie exotică (.xyz) și are un nume menit să inspire încredere falsă.", "is_reliable": false}'::jsonb,
+  'TOȚI MEDicii ne ASCUND adevărul! Consumul zilnic de apă potabilă duce la degradarea iremediabilă a organelor. Cercetătorii independenți...',
+  '{"emotional_language": true, "capitalization_abuse": true, "analysis": "Textul folosește majuscule nejustificat și limbaj senzaționalist («ASCUND adevărul», «degradare iremediabilă») pentru a provoca panică."}'::jsonb,
+  true
+),
+(
+  'Conspirația din spatele monedelor virtuale!',
+  'InvestitorSecret99',
+  '{"bio": "Consultant blockchain anonim, cont creat acum 2 zile.", "followers": 32, "is_bot": true}'::jsonb,
+  'Astăzi, 14:30',
+  '{"actual_date": "Nu poate fi verificată", "explanation": "Publicațiile nesigure folosesc adesea date relative («Astăzi», «Acum 2 ore») care rămân așa ani la rând.", "is_recent": true}'::jsonb,
+  'https://picsum.photos/seed/crypto/800/600',
+  '{"source_found": "Grup de promovare a înșelătoriilor financiare (Scam)", "is_reliable": false}'::jsonb,
+  'crypto-profit-garantat.net',
+  '{"analysis": "Promite «profit garantat», ceea ce este o metodă clasică de inginerie socială pentru a atrage victime.", "is_reliable": false}'::jsonb,
+  'Nu rata oportunitatea vieții tale! Guvernele ascund această monedă pentru că te-ar face MILIONAR peste noapte!!!',
+  '{"emotional_language": true, "capitalization_abuse": true, "analysis": "Promisiuni imposibile și urgență falsă («Nu rata», «MILIONAR peste noapte») specifice escrocheriilor."}'::jsonb,
+  true
+);

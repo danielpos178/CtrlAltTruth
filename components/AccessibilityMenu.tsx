@@ -1,11 +1,13 @@
 "use client"
 
 import React, { useEffect, useState, useRef } from "react"
-import { Globe, Settings2, Minus, Plus, RefreshCcw, Type, MonitorSmartphone, Sunrise, Moon, Sun } from "lucide-react"
+import { Globe, Settings2, Minus, Plus, RefreshCcw, Type, MonitorSmartphone, Sunrise, Moon, Sun, ShieldAlert } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { useTheme } from '@/components/providers/ThemeProvider'
+import { toggleSeniorModeAction, updateA11yPreferencesAction } from '@/app/actions/clase'
+import toast from 'react-hot-toast'
 
 // Languages supported by Google Translate
 const languages = [
@@ -46,11 +48,13 @@ const defaultPrefs: A11yPrefs = {
 export function AccessibilityMenu() {
   const [mounted, setMounted] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
+  const [isSeniorLoading, setIsSeniorLoading] = useState(false)
   
   const { theme, toggleTheme, mounted: themeMounted } = useTheme();
   
   // A11y State
   const [prefs, setPrefs] = useState<A11yPrefs>(defaultPrefs)
+  const [seniorMode, setSeniorMode] = useState(false)
 
   // Language State
   const [currentLang, setCurrentLang] = useState("ro")
@@ -70,6 +74,11 @@ export function AccessibilityMenu() {
       if (stored) {
         const parsed = JSON.parse(stored) as A11yPrefs
         setTimeout(() => setPrefs({ ...defaultPrefs, ...parsed }), 0)
+      }
+      
+      const storedSenior = localStorage.getItem('senior-mode')
+      if (storedSenior) {
+        setTimeout(() => setSeniorMode(storedSenior === 'true'), 0)
       }
     } catch (_) {}
 
@@ -141,9 +150,16 @@ export function AccessibilityMenu() {
     if (prefs.dyslexiaFont) root.classList.add('dyslexia-font')
     else root.classList.remove('dyslexia-font')
 
-    root.style.fontSize = `${prefs.fontSize}px`
+    localStorage.setItem('senior-mode', String(seniorMode))
+    if (seniorMode) {
+      root.classList.add('senior-mode')
+      root.style.fontSize = '20px' // base font size override
+    } else {
+      root.classList.remove('senior-mode')
+      root.style.fontSize = `${prefs.fontSize}px`
+    }
 
-  }, [prefs, mounted])
+  }, [prefs, mounted, seniorMode])
 
   // Language Detection
   useEffect(() => {
@@ -217,8 +233,26 @@ export function AccessibilityMenu() {
     }
   }
 
+  const syncToDB = async (updates: any) => {
+    try {
+      const result = await updateA11yPreferencesAction(updates);
+      if (!result.success && result.error !== 'Unauthorized') {
+        toast.error('Nu s-a putut salva preferința în profilul tău.', { id: 'a11y-error' });
+      }
+    } catch (e) {}
+  };
+
   const updatePrefs = (updates: Partial<A11yPrefs>) => {
-    setPrefs(prev => ({ ...prev, ...updates }))
+    setPrefs(prev => {
+      const next = { ...prev, ...updates };
+      syncToDB({
+        a11y_high_contrast: next.highContrast,
+        a11y_reduce_motion: next.reduceMotion,
+        a11y_dyslexia_font: next.dyslexiaFont,
+        a11y_font_size: next.fontSize
+      });
+      return next;
+    });
   }
 
   const handleFontSize = (action: 'increase' | 'decrease' | 'reset') => {
@@ -227,8 +261,27 @@ export function AccessibilityMenu() {
       if (action === 'increase') newSize = Math.min(newSize + 2, 24)
       if (action === 'decrease') newSize = Math.max(newSize - 2, 12)
       if (action === 'reset') newSize = DEFAULT_FONT_SIZE
-      return { ...prev, fontSize: newSize }
+      const next = { ...prev, fontSize: newSize }
+      syncToDB({ a11y_font_size: next.fontSize });
+      return next;
     })
+  }
+
+  const handleSeniorModeToggle = async (checked: boolean) => {
+    setSeniorMode(checked);
+    setIsSeniorLoading(true);
+    const result = await toggleSeniorModeAction(checked);
+    setIsSeniorLoading(false);
+    if (!result.success && result.error !== 'Unauthorized') {
+      toast.error('Nu s-a putut salva preferința în profilul tău.');
+    } else if (result.success) {
+      toast.success(checked ? 'Modul Seniori Activat. Baza de date adaptată.' : 'Modul Seniori Dezactivat.');
+    }
+  }
+
+  const handleThemeToggle = (checked: boolean) => {
+    toggleTheme();
+    syncToDB({ theme: checked ? 'dark' : 'light' });
   }
 
   const currentDisplayText = languages.find((lang) => lang.code === currentLang)?.name || "Română"
@@ -243,7 +296,7 @@ export function AccessibilityMenu() {
         <PopoverContent 
           align="end" 
           sideOffset={8}
-          className="notranslate w-80 p-5 bg-white dark:bg-[#1a1a1a] border border-[#1a1a1a]/10 dark:border-white/10 text-[#1a1a1a] dark:text-white shadow-xl rounded-xl space-y-6"
+          className="notranslate w-84 p-5 bg-white dark:bg-[#1a1a1a] border border-[#1a1a1a]/10 dark:border-white/10 text-[#1a1a1a] dark:text-white shadow-xl rounded-xl space-y-6"
         >
           {/* Header */}
           <div className="flex items-center gap-2 border-b border-[#1a1a1a]/10 dark:border-white/10 pb-3">
@@ -291,13 +344,25 @@ export function AccessibilityMenu() {
           {/* Settings Group: Toggles */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
+              <Label htmlFor="a11y-senior" className="text-sm font-medium flex items-center gap-2 cursor-pointer">
+                <ShieldAlert className="w-4 h-4" /> Modul Seniori
+              </Label>
+              <Switch 
+                id="a11y-senior" 
+                checked={seniorMode} 
+                onCheckedChange={handleSeniorModeToggle} 
+                disabled={isSeniorLoading}
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
               <Label htmlFor="a11y-darkmode" className="text-sm font-medium flex items-center gap-2 cursor-pointer">
                 {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />} Mod Întunecat
               </Label>
               <Switch 
                 id="a11y-darkmode" 
                 checked={theme === 'dark'} 
-                onCheckedChange={toggleTheme} 
+                onCheckedChange={handleThemeToggle} 
                 disabled={!themeMounted}
               />
             </div>
