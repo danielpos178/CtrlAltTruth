@@ -266,3 +266,31 @@ html.theme-high-contrast {
 html.theme-high-contrast * {
   border-color: currentColor !important;
 }
+
+/* Modul Seniori (Accessibility for elderly) */
+html.senior-mode {
+  font-size: 20px !important;
+  /* Maximize global contrast */
+  filter: contrast(110%) saturate(105%);
+}
+html.senior-mode body {
+  @apply text-[#000000] dark:text-[#ffffff] bg-[#fdfdfd] dark:bg-[#000000];
+}
+html.senior-mode .card, html.senior-mode [class*="rounded"], html.senior-mode [class*="border"] {
+  border-width: 2px !important;
+  border-color: #000000 !important;
+}
+html.dark.senior-mode .card, html.dark.senior-mode [class*="rounded"], html.dark.senior-mode [class*="border"] {
+  border-color: #ffffff !important;
+}
+html.senior-mode p, html.senior-mode span, html.senior-mode div {
+  line-height: 1.7 !important;
+  letter-spacing: 0.02em !important;
+}
+html.senior-mode button, html.senior-mode a {
+  min-height: 56px !important; /* Thick touch targets */
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+  border-width: 3px !important;
+  border-radius: 8px !important;
+}

@@ -8,14 +8,15 @@ import { ArrowRight, ShieldCheck, BarChart3, Globe, Smartphone } from 'lucide-re
 export default function LandingView() {
   const router = useRouter();
   const [statsAnimated, setStatsAnimated] = useState(false);
-  const [dots, setDots] = useState(() => {
-    const initialDots = Array(100).fill('neutral');
-    initialDots[44] = 'infected';
-    return initialDots;
-  });
+  const [dots, setDots] = useState(Array(100).fill('neutral'));
 
   // Disinformation Spread Simulation
   useEffect(() => {
+    // Initialize one red dot in the center
+    const initialDots = Array(100).fill('neutral');
+    initialDots[44] = 'infected';
+    setDots(initialDots);
+
     let interval: NodeJS.Timeout;
     let isResetting = false;
 
@@ -67,8 +68,8 @@ export default function LandingView() {
   // Trigger stats animation after a short delay
   useEffect(() => {
     if (document.documentElement.classList.contains('reduced-motion')) {
-      const immediateTimer = setTimeout(() => setStatsAnimated(true), 0);
-      return () => clearTimeout(immediateTimer);
+      setStatsAnimated(true);
+      return;
     }
     const timer = setTimeout(() => setStatsAnimated(true), 500);
     return () => clearTimeout(timer);
