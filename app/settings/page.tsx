@@ -4,8 +4,11 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/components/providers/AuthProvider';
-import { User, LogOut, Lock, AlertCircle, Trash2, CheckCircle2 } from 'lucide-react';
+import { User, LogOut, Lock, AlertCircle, Trash2, CheckCircle2, Shield } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { updateUserRoleAction } from '@/app/actions/auth';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
 
 export default function SettingsPage() {
   const { user, isLoading, signOut } = useAuth();
@@ -19,9 +22,17 @@ export default function SettingsPage() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
+  const [userRole, setUserRole] = useState<'student' | 'profesor'>('student');
+  const [isUpdatingRole, setIsUpdatingRole] = useState(false);
+
   useEffect(() => {
     if (!isLoading && !user) {
       router.push('/login');
+    } else if (user) {
+      // Fetch initial role
+      supabase.from('user_roles').select('role').eq('user_id', user.id).maybeSingle().then(({data}) => {
+        if (data?.role) setUserRole(data.role as any);
+      });
     }
   }, [user, isLoading, router]);
 
@@ -103,15 +114,53 @@ export default function SettingsPage() {
             <User className="w-5 h-5 text-gray-500" />
             Informații
           </h3>
-          <div>
-            <p className="text-sm font-medium text-[#1a1a1a]/60 dark:text-white/60">Email</p>
-            <p className="text-lg text-[#1a1a1a] dark:text-white">{user.email}</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <p className="text-sm font-medium text-[#1a1a1a]/60 dark:text-white/60">Email</p>
+              <p className="text-lg text-[#1a1a1a] dark:text-white">{user.email}</p>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-[#1a1a1a]/60 dark:text-white/60">Data înregistrării</p>
+              <p className="text-lg text-[#1a1a1a] dark:text-white">
+                {new Date(user.created_at).toLocaleDateString('ro-RO')}
+              </p>
+            </div>
           </div>
-          <div>
-            <p className="text-sm font-medium text-[#1a1a1a]/60 dark:text-white/60">Data înregistrării</p>
-            <p className="text-lg text-[#1a1a1a] dark:text-white">
-              {new Date(user.created_at).toLocaleDateString('ro-RO')}
-            </p>
+        </div>
+
+        <div className="bg-white dark:bg-[#1a1a1a] p-6 rounded-3xl border border-[#1a1a1a]/10 dark:border-white/10 shadow-sm space-y-6">
+          <h3 className="text-xl font-bold text-[#1a1a1a] dark:text-white flex items-center gap-2">
+            <Shield className="w-5 h-5 text-[#7c1f31]" />
+            Tip Cont
+          </h3>
+          <div className="space-y-4 max-w-md">
+            <RadioGroup
+              value={userRole}
+              onValueChange={async (val) => {
+                const newRole = val as 'student' | 'profesor';
+                setUserRole(newRole);
+                setIsUpdatingRole(true);
+                const res = await updateUserRoleAction(newRole);
+                setIsUpdatingRole(false);
+                if (res.success) {
+                  toast.success('Tipul contului a fost actualizat!');
+                  router.refresh();
+                } else {
+                  toast.error(res.error || 'A apărut o eroare.');
+                }
+              }}
+              className="flex flex-col space-y-2 mt-4"
+              disabled={isUpdatingRole}
+            >
+              <div className="flex items-center space-x-3 space-y-0 p-3 border rounded-xl cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                <RadioGroupItem value="student" id="role-student" />
+                <Label htmlFor="role-student" className="font-medium cursor-pointer w-full">Cont Elev</Label>
+              </div>
+              <div className="flex items-center space-x-3 space-y-0 p-3 border rounded-xl cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                <RadioGroupItem value="profesor" id="role-profesor" />
+                <Label htmlFor="role-profesor" className="font-medium cursor-pointer w-full">Cont Profesor</Label>
+              </div>
+            </RadioGroup>
           </div>
         </div>
 

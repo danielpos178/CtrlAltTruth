@@ -28,7 +28,7 @@ export default function LoginPage() {
         throw error;
       }
 
-      router.push('/progress');
+      router.push('/progres');
       router.refresh(); // Refresh to update navbar state
     } catch (err: any) {
       setError(err.message || 'A apărut o eroare la autentificare.');
@@ -120,7 +120,7 @@ export default function LoginPage() {
         <div className="mt-6 text-center">
           <p className="text-sm text-[#1a1a1a]/60 dark:text-white/60">
             Nu ai cont?{' '}
-            <Link href="/register" className="font-medium text-[#7c1f31] dark:text-[#ff4d6d] hover:underline">
+            <Link href="/inscriere" className="font-medium text-[#7c1f31] dark:text-[#ff4d6d] hover:underline">
               Creează cont nou
             </Link>
           </p>

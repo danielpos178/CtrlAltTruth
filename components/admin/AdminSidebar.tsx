@@ -16,6 +16,8 @@ export function AdminSidebar() {
     { href: '/admin', label: 'Panou Administrator', icon: LayoutDashboard, exact: true },
     { href: '/admin/lessons', label: 'Lecții (Markdown)', icon: BookOpen },
     { href: '/admin/swipe', label: 'Swipe Game', icon: Gamepad2 },
+    { href: '/admin/sandbox', label: 'Erori Logice', icon: Trophy },
+    { href: '/admin/reflex', label: 'Simulator Reflex', icon: ShieldAlert },
     { href: '/admin/badges', label: 'Insigne (Gamificare)', icon: Trophy },
   ];
 

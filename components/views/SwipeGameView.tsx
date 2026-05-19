@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Check, Clock } from 'lucide-react';
 import { useProgress } from '@/hooks/useProgress';
+import confetti from 'canvas-confetti';
 
 export interface SwipeCard {
   id: number;
@@ -25,14 +26,47 @@ export default function SwipeGameView({ initialCards }: SwipeGameViewProps) {
   const [gameOver, setGameOver] = useState(false);
   const [feedback, setFeedback] = useState<{ isCorrect: boolean; explanation: string } | null>(null);
   const [cards, setCards] = useState(() => shuffleCards(initialCards));
+  const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
   const { saveSwipeGameScore, notifyUnauthenticated } = useProgress();
 
   useEffect(() => {
-    // Notify user on first load
     notifyUnauthenticated();
   }, [notifyUnauthenticated]);
 
-  const handleSwipe = useCallback((userGuessedFake: boolean | null) => {
+  const triggerConfetti = useCallback(() => {
+    const duration = 3000;
+    const end = Date.now() + duration;
+
+    const frame = () => {
+      confetti({
+        particleCount: 5,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0 },
+        colors: ['#7c1f31', '#10b981', '#f59e0b']
+      });
+      confetti({
+        particleCount: 5,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1 },
+        colors: ['#7c1f31', '#10b981', '#f59e0b']
+      });
+
+      if (Date.now() < end) {
+        requestAnimationFrame(frame);
+      }
+    };
+    frame();
+  }, []);
+
+  const handleSwipe = useCallback((userGuessedFake: boolean | null, direction?: 'left' | 'right') => {
+    if (feedback || gameOver) return;
+    
+    if (direction) {
+      setSwipeDirection(direction);
+    }
+
     const currentCard = cards[currentIndex];
     const isCorrect = userGuessedFake !== null && userGuessedFake === currentCard.isFake;
     let newScore = score;
@@ -49,15 +83,32 @@ export default function SwipeGameView({ initialCards }: SwipeGameViewProps) {
 
     setTimeout(() => {
       setFeedback(null);
+      setSwipeDirection(null);
       if (currentIndex < cards.length - 1) {
         setCurrentIndex(prev => prev + 1);
         setTimeLeft(10);
       } else {
         setGameOver(true);
         saveSwipeGameScore(newScore);
+        if (newScore >= cards.length * 0.8) {
+          triggerConfetti();
+        }
       }
-    }, 3000);
-  }, [currentIndex, cards, score, saveSwipeGameScore]);
+    }, 2000);
+  }, [currentIndex, cards, score, saveSwipeGameScore, feedback, gameOver, triggerConfetti]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        handleSwipe(true, 'left');
+      } else if (e.key === 'ArrowRight') {
+        handleSwipe(false, 'right');
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleSwipe]);
 
   useEffect(() => {
     if (gameOver || feedback) return;
@@ -82,6 +133,7 @@ export default function SwipeGameView({ initialCards }: SwipeGameViewProps) {
     setTimeLeft(10);
     setGameOver(false);
     setFeedback(null);
+    setSwipeDirection(null);
   };
 
   if (gameOver) {
@@ -123,10 +175,17 @@ export default function SwipeGameView({ initialCards }: SwipeGameViewProps) {
           {!feedback ? (
             <motion.div
               key={currentCard.id}
-              initial={{ scale: 0.9, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
+              initial={{ scale: 0.9, opacity: 0, y: 20, x: 0, rotate: 0 }}
+              animate={{ 
+                scale: 1, 
+                opacity: 1, 
+                y: 0,
+                x: swipeDirection === 'left' ? -200 : swipeDirection === 'right' ? 200 : 0,
+                rotate: swipeDirection === 'left' ? -15 : swipeDirection === 'right' ? 15 : 0
+              }}
               exit={{ scale: 0.9, opacity: 0, y: -20 }}
-              className="absolute inset-0 bg-white dark:bg-[#1a1a1a] rounded-3xl shadow-2xl border border-[#1a1a1a]/10 dark:border-white/10 p-8 flex flex-col justify-center text-center"
+              transition={{ duration: swipeDirection ? 0.3 : 0.4, ease: "easeOut" }}
+              className="absolute inset-0 bg-white dark:bg-[#1a1a1a] rounded-3xl shadow-2xl border border-[#1a1a1a]/10 dark:border-white/10 p-8 flex flex-col justify-center text-center origin-bottom will-change-transform"
             >
               <h3 className="text-2xl md:text-3xl font-bold text-[#1a1a1a] dark:text-white leading-tight font-serif">
                 &quot;{currentCard.text}&quot;
@@ -171,23 +230,25 @@ export default function SwipeGameView({ initialCards }: SwipeGameViewProps) {
 
       <div className="flex gap-6 mt-12 w-full max-w-md px-4">
         <button
-          onClick={() => handleSwipe(true)}
-          disabled={!!feedback}
-          className="flex-1 h-20 bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-900/50 text-red-700 dark:text-red-300 rounded-2xl font-bold text-xl flex items-center justify-center gap-2 transition-colors disabled:opacity-50 min-h-[44px]"
+          onClick={() => handleSwipe(true, 'left')}
+          disabled={!!feedback || gameOver}
+          className="flex-1 h-20 bg-red-100 dark:bg-red-900/30 hover:bg-red-200 dark:hover:bg-red-900/50 text-red-700 dark:text-red-300 rounded-2xl font-bold text-xl flex flex-col items-center justify-center gap-1 transition-colors disabled:opacity-50 min-h-[44px]"
         >
-          <X className="w-6 h-6" /> SUSPECT
+          <div className="flex items-center gap-2"><X className="w-6 h-6" /> FALS</div>
+          <span className="text-xs opacity-60 font-medium hidden md:block">kbd: [&larr;]</span>
         </button>
         <button
-          onClick={() => handleSwipe(false)}
-          disabled={!!feedback}
-          className="flex-1 h-20 bg-green-100 dark:bg-green-900/30 hover:bg-green-200 dark:hover:bg-green-900/50 text-green-700 dark:text-green-300 rounded-2xl font-bold text-xl flex items-center justify-center gap-2 transition-colors disabled:opacity-50 min-h-[44px]"
+          onClick={() => handleSwipe(false, 'right')}
+          disabled={!!feedback || gameOver}
+          className="flex-1 h-20 bg-green-100 dark:bg-green-900/30 hover:bg-green-200 dark:hover:bg-green-900/50 text-green-700 dark:text-green-300 rounded-2xl font-bold text-xl flex flex-col items-center justify-center gap-1 transition-colors disabled:opacity-50 min-h-[44px]"
         >
-          <Check className="w-6 h-6" /> CREDIBIL
+          <div className="flex items-center gap-2">ADEVĂRAT <Check className="w-6 h-6" /></div>
+          <span className="text-xs opacity-60 font-medium hidden md:block">kbd: [&rarr;]</span>
         </button>
       </div>
       <p className="text-[#1a1a1a]/50 dark:text-white/50 text-sm mt-6 text-center">
-        Apasă SUSPECT dacă titlul folosește manipulare emoțională sau clickbait.<br/>
-        Apasă CREDIBIL dacă este o știre factuală, neutră.
+        Apasă FALS (sau &larr;) dacă titlul folosește manipulare emoțională sau clickbait.<br/>
+        Apasă ADEVĂRAT (sau &rarr;) dacă este o știre factuală, neutră.
       </p>
     </div>
   );

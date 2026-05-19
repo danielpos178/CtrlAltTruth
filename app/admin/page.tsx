@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { BookOpen, Gamepad2, Trophy, ArrowRight, ShieldAlert } from 'lucide-react';
+import { BookOpen, Gamepad2, Trophy, ArrowRight, ShieldAlert, SearchCode, Compass } from 'lucide-react';
 
 export default function AdminDashboardPage() {
   const adminModules = [
@@ -17,16 +17,40 @@ export default function AdminDashboardPage() {
       description: 'Gestionează enunțurile pentru Swipe Game (Adevărat / Fals).',
       href: '/admin/swipe',
       icon: Gamepad2,
-      iconColor: 'text-[#7c1f31] dark:text-[#f8b4c1]',
-      bgColor: 'bg-[#7c1f31]/10 dark:bg-[#7c1f31]/20'
+      iconColor: 'text-[#0ea5e9] dark:text-[#7dd3fc]',
+      bgColor: 'bg-[#0ea5e9]/10 dark:bg-[#0ea5e9]/20'
+    },
+    {
+      title: 'Groapa cu Nisip (Sandbox)',
+      description: 'Gestionează erorile logice și provocările pentru modulul Sandbox.',
+      href: '/admin/sandbox',
+      icon: ShieldAlert,
+      iconColor: 'text-[#ef4444] dark:text-[#f87171]',
+      bgColor: 'bg-[#ef4444]/10 dark:bg-[#ef4444]/20'
+    },
+    {
+      title: 'Simulator de Reflex Digital',
+      description: 'Adaugă și editează scenarii de verificare a surselor și autorilor.',
+      href: '/admin/reflex',
+      icon: Compass,
+      iconColor: 'text-[#8b5cf6] dark:text-[#c084fc]',
+      bgColor: 'bg-[#8b5cf6]/10 dark:bg-[#8b5cf6]/20'
+    },
+    {
+      title: 'Detector de Manipulare',
+      description: 'Gestionează temele și textele pentru analiza manipulării emoționale.',
+      href: '/admin/analyzer',
+      icon: SearchCode,
+      iconColor: 'text-[#f59e0b] dark:text-[#fbbf24]',
+      bgColor: 'bg-[#f59e0b]/10 dark:bg-[#f59e0b]/20'
     },
     {
       title: 'Insigne de Gamificare',
       description: 'Creează insigne (badges) noi pentru premierea utilizatorilor.',
       href: '/admin/badges',
       icon: Trophy,
-      iconColor: 'text-[#7c1f31] dark:text-[#f8b4c1]',
-      bgColor: 'bg-[#7c1f31]/10 dark:bg-[#7c1f31]/20'
+      iconColor: 'text-[#10b981] dark:text-[#34d399]',
+      bgColor: 'bg-[#10b981]/10 dark:bg-[#10b981]/20'
     }
   ];
 

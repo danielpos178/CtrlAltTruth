@@ -5,8 +5,8 @@ import { supabase } from '@/lib/supabase';
 import { useEffect, useState, useRef } from 'react';
 import toast from 'react-hot-toast';
 import { checkAndAwardBadge, triggerConfetti } from '@/lib/gamification';
-
 import { badgeEventTarget } from '@/components/ui/BadgeUnlockModal';
+import { updateProgressAction } from '@/app/actions/gamification';
 
 export function useProgress() {
   const { user, isLoading } = useAuth();
@@ -49,6 +49,10 @@ export function useProgress() {
       if (score === 100) { // Or whatever the max score is
         await handleBadgeCheck('perfect_swipe');
       }
+      
+      // Update the daily gamification streak and bust caches safely
+      await updateProgressAction().catch(console.error);
+
     } catch (err) {
       console.error(err);
     }
@@ -67,6 +71,8 @@ export function useProgress() {
       if (error) console.error('Error saving topic:', error.message || error);
       
       await handleBadgeCheck('first_analysis');
+      await updateProgressAction().catch(console.error);
+
     } catch (err) {
       console.error(err);
     }
@@ -85,6 +91,7 @@ export function useProgress() {
       if (error) console.error('Error saving lesson progress:', error.message || error);
       
       await handleBadgeCheck('first_lesson');
+      await updateProgressAction().catch(console.error);
       
       // We could also query to check if all lessons are done
       const { count } = await supabase.from('lesson_progress').select('*', { count: 'exact', head: true }).eq('user_id', user.id);
@@ -97,10 +104,32 @@ export function useProgress() {
     }
   };
 
+  /** Save Sandbox Game Answer */
+  const saveSandboxAnswer = async (challengeId: number, fallacyId: number, isCorrect: boolean) => {
+    notifyUnauthenticated();
+    if (!user) return;
+
+    try {
+      const { error } = await supabase
+        .from('user_answers')
+        .insert([{ user_id: user.id, challenge_id: challengeId, fallacy_id: fallacyId, is_correct: isCorrect, answered_at: new Date().toISOString() }]);
+      
+      if (error) console.error('Error saving sandbox answer:', error.message || error);
+      
+      // Update streak
+      if (isCorrect) {
+        await updateProgressAction().catch(console.error);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return {
     saveSwipeGameScore,
     saveAnalyzedTopic,
     markLessonCompleted,
+    saveSandboxAnswer,
     notifyUnauthenticated
   };
 }

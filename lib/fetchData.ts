@@ -77,12 +77,18 @@ export async function getLessonBySlug(slug: string) {
   }
 }
 
-export async function getSwipeCards() {
+export async function getSwipeCards(isSeniorMode: boolean = false) {
   try {
-    const { data: cards, error } = await supabase
+    let query = supabase
       .from('swipe_cards')
       .select('*')
       .order('id');
+
+    if (isSeniorMode) {
+      query = query.eq('is_senior_friendly', true);
+    }
+
+    const { data: cards, error } = await query;
 
     if (error) throw error;
 
