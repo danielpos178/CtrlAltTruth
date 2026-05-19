@@ -19,7 +19,7 @@ export function BadgeForm({ editingBadge, onCancelEdit }: { editingBadge?: any, 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { register, handleSubmit, formState: { errors }, reset } = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema as any),
+    resolver: zodResolver(schema),
     defaultValues: {
       icon_name: 'Trophy',
     }
@@ -48,21 +48,21 @@ export function BadgeForm({ editingBadge, onCancelEdit }: { editingBadge?: any, 
     setIsSubmitting(true);
     try {
       if (editingBadge) {
-         const res = await updateBadge(editingBadge.id, data);
-         if (res.error) {
-           toast.error(res.error);
-         } else {
-           toast.success('Insigna a fost actualizată!');
-           if (onCancelEdit) onCancelEdit();
-         }
+        const res = await updateBadge(editingBadge.id, data);
+        if (res.error) {
+          toast.error(res.error);
+        } else {
+          toast.success('Insigna a fost actualizată!');
+          if (onCancelEdit) onCancelEdit();
+        }
       } else {
-         const res = await createBadge(data);
-         if (res.error) {
-           toast.error(res.error);
-         } else {
-           toast.success('Insigna a fost creată cu succes!');
-           reset();
-         }
+        const res = await createBadge(data);
+        if (res.error) {
+          toast.error(res.error);
+        } else {
+          toast.success('Insigna a fost creată cu succes!');
+          reset();
+        }
       }
     } catch {
       toast.error('A apărut o eroare.');
@@ -79,58 +79,58 @@ export function BadgeForm({ editingBadge, onCancelEdit }: { editingBadge?: any, 
           {editingBadge ? 'Editează Insigna' : 'Adaugă Insignă Nouă'}
         </h2>
         {editingBadge && (
-           <button onClick={onCancelEdit} className="text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-full transition-colors flex items-center gap-2 text-sm font-bold">
-             <X className="w-4 h-4" /> Anulează
-           </button>
+          <button onClick={onCancelEdit} className="text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-full transition-colors flex items-center gap-2 text-sm font-bold">
+            <X className="w-4 h-4" /> Anulează
+          </button>
         )}
       </div>
-      
+
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <label className="font-bold text-sm block">Nume Insignă</label>
-            <input 
-              {...register('name')} 
+            <input
+              {...register('name')}
               placeholder="Ex: Începător"
               className="w-full px-4 py-2 bg-gray-50 dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl"
             />
-            {errors.name && <p className="text-red-500 text-xs flex items-center gap-1"><AlertCircle className="w-3 h-3"/>{errors.name.message}</p>}
+            {errors.name && <p className="text-red-500 text-xs flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors.name.message}</p>}
           </div>
 
           <div className="space-y-2">
             <label className="font-bold text-sm block">Criteriu (Acțiune necesară)</label>
-            <input 
-              {...register('criteria')} 
+            <input
+              {...register('criteria')}
               placeholder="ex: first_lesson, perfect_swipe"
               className="w-full px-4 py-2 bg-gray-50 dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl"
             />
-            {errors.criteria && <p className="text-red-500 text-xs flex items-center gap-1"><AlertCircle className="w-3 h-3"/>{errors.criteria.message}</p>}
+            {errors.criteria && <p className="text-red-500 text-xs flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors.criteria.message}</p>}
           </div>
-          
+
           <div className="space-y-2 md:col-span-2">
             <label className="font-bold text-sm block">Nume Iconiță (ex: Trophy, Flame, Star)</label>
-            <input 
-              {...register('icon_name')} 
+            <input
+              {...register('icon_name')}
               placeholder="ex: Trophy"
               className="w-full px-4 py-2 bg-gray-50 dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl"
             />
-            {errors.icon_name && <p className="text-red-500 text-xs flex items-center gap-1"><AlertCircle className="w-3 h-3"/>{errors.icon_name.message}</p>}
+            {errors.icon_name && <p className="text-red-500 text-xs flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors.icon_name.message}</p>}
           </div>
 
           <div className="space-y-2 md:col-span-2">
             <label className="font-bold text-sm block">Descriere</label>
-            <textarea 
-              {...register('description')} 
+            <textarea
+              {...register('description')}
               placeholder="Ex: Ai parcurs prima ta lecție."
               rows={3}
               className="w-full px-4 py-2 bg-gray-50 dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl"
             />
-            {errors.description && <p className="text-red-500 text-xs flex items-center gap-1"><AlertCircle className="w-3 h-3"/>{errors.description.message}</p>}
+            {errors.description && <p className="text-red-500 text-xs flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors.description.message}</p>}
           </div>
         </div>
 
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           disabled={isSubmitting}
           className={`px-6 py-3 font-bold rounded-xl transition-colors disabled:opacity-50 text-white ${editingBadge ? 'bg-[#5a1624] hover:bg-[#43101b]' : 'bg-[#7c1f31] hover:bg-[#5a1624]'}`}
         >

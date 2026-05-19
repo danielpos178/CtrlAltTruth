@@ -1,4 +1,3 @@
-// Licensed under the GNU AGPL-3.0-only.
 import { createBrowserClient } from '@supabase/ssr';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';

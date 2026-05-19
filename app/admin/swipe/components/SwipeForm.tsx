@@ -17,8 +17,8 @@ const schema = z.object({
 export function SwipeForm({ editingCard, onCancelEdit }: { editingCard?: any, onCancelEdit?: () => void }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema as any),
+  const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm<z.input<typeof schema>>({
+    resolver: zodResolver(schema),
     defaultValues: {
       is_fake: false,
     }
